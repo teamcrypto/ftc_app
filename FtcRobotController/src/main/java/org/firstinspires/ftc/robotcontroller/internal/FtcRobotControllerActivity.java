@@ -54,6 +54,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.google.blocks.ftcrobotcontroller.BlocksActivity;
@@ -159,6 +160,17 @@ public class FtcRobotControllerActivity extends Activity
     public void requestRestart() {
       requestRobotRestart();
     }
+
+  }
+
+  protected NumberPicker numberPicker;
+    protected UserInput userInput;
+
+  private void mySetup(){
+    numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
+    numberPicker.setMaxValue(10);
+      userInput = UserInput.getInstance();
+      userInput.setActivity(this);
 
   }
 
@@ -298,6 +310,8 @@ public class FtcRobotControllerActivity extends Activity
     wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "");
 
     hittingMenuButtonBrightensScreen();
+
+    mySetup();
 
     wifiLock.acquire();
     callback.networkConnectionUpdate(WifiDirectAssistant.Event.DISCONNECTED);
