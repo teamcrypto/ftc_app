@@ -52,9 +52,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.blocks.ftcrobotcontroller.BlocksActivity;
@@ -110,6 +114,8 @@ import org.firstinspires.ftc.robotcore.internal.webserver.RobotControllerWebInfo
 import org.firstinspires.ftc.robotcore.internal.webserver.WebServer;
 import org.firstinspires.inspection.RcInspectionActivity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -148,7 +154,6 @@ public class FtcRobotControllerActivity extends Activity
   protected UpdateUI updateUI;
   protected Dimmer dimmer;
   protected LinearLayout entireScreenLayout;
-
   protected FtcRobotControllerService controllerService;
   protected NetworkType networkType;
 
@@ -162,16 +167,68 @@ public class FtcRobotControllerActivity extends Activity
     }
 
   }
-
   protected NumberPicker numberPicker;
-    protected UserInput userInput;
+  protected UserInput userInput;
+  protected Button button;
+  protected Spinner dropdown;
+  protected ArrayList<String> listItems = new ArrayList<String>();
+
+  public void finishList(){
+      final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, listItems);
+      adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+      dropdown.post(new Runnable() {
+        @Override
+        public void run() {
+          dropdown.setAdapter(adapter);
+        }
+      });
+
+  }
 
   private void mySetup(){
     numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
     numberPicker.setMaxValue(10);
-      userInput = UserInput.getInstance();
-      userInput.setActivity(this);
+    numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+      @Override
+      public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
+        UserInput.getInstance().onValueChange(newVal);
+      }
+    });
+    userInput = UserInput.getInstance();
+    userInput.setActivity(this);
+    dropdown = (Spinner) findViewById(R.id.spinner);
+    dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        UserInput.getInstance().onItemSelected(i, l);
+      }
 
+      @Override
+      public void onNothingSelected(AdapterView<?> adapterView) {
+
+      }
+    });
+    hideUI();
+  }
+
+  public void hideUI(){
+    dropdown.post(new Runnable() {
+      @Override
+      public void run() {
+        dropdown.setVisibility(View.GONE);
+        numberPicker.setVisibility(View.GONE);
+      }
+    });
+  }
+
+  public void showUI(){
+    dropdown.post(new Runnable() {
+      @Override
+      public void run() {
+        dropdown.setVisibility(View.VISIBLE);
+        numberPicker.setVisibility(View.VISIBLE);
+      }
+    });
   }
 
   protected ServiceConnection connection = new ServiceConnection() {

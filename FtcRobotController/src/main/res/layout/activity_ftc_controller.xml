@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               xmlns:style="http://schemas.android.com/apk/res-auto"
               tools:context="org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity"
               android:focusable="true"
+              android:focusableInTouchMode="true"
               android:id="@+id/entire_screen"
               android:orientation="vertical">
 
@@ -175,17 +176,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:textStyle="bold"
       android:visibility="invisible"
       android:text=""
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/textGamepad2"
         android:layout_alignParentStart="true" />
 
     <NumberPicker
         android:id="@+id/numberPicker"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginEnd="37dp"
-        android:layout_above="@+id/textGamepad1"
+        android:layout_height="100dp"
+        android:layout_marginBottom="-40dp"
+        android:layout_alignBottom="@+id/spinner"
         android:layout_alignParentEnd="true" />
+
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="200dp"
+        android:layout_height="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="250dp" />
 
   </RelativeLayout>
 
