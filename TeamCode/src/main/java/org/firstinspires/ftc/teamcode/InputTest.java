@@ -43,10 +43,16 @@ public class InputTest extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
   private UserInput userInput;
-  private int variable = 0;
+  Integer var = 3;Integer var2 = 6;
 
   @Override
   public void init() {
+    userInput = UserInput.getInstance();
+    userInput.setup();
+
+
+    userInput.addVariable(var, "test1");
+    userInput.addVariable(var2, "test2");
     telemetry.addData("Status", "Initialized");
   }
 
@@ -56,18 +62,23 @@ public class InputTest extends OpMode {
      */
   @Override
   public void init_loop() {
+    telemetry.addData("var1", var);
+    telemetry.addData("var2", var2);
+    var = userInput.getValue();
+    var2 = userInput.getValue();
   }
 
   /*
    * This method will be called ONCE when start is pressed
    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
    */
+
   @Override
   public void start() {
-    runtime.reset();
-    userInput = UserInput.getInstance();
-    variable = userInput.getNumber();
+      runtime.reset();
+      userInput.hideUI();
   }
+
 
   /*
    * This method will be called repeatedly in a loop
@@ -76,6 +87,13 @@ public class InputTest extends OpMode {
   @Override
   public void loop() {
     telemetry.addData("Status", "Run Time: " + runtime.toString());
-    telemetry.addData("var", variable);
+    telemetry.addData("var1", var);
+    telemetry.addData("var2", var2);
+  }
+
+
+  @Override
+  public void stop(){
+      userInput.hideUI();
   }
 }
