@@ -51,9 +51,9 @@ public class InputTest extends OpMode {
     userInput = UserInput.getInstance();
 
 
-    userInput.addVariable(var, "test1");
+   /*userInput.addVariable(var, "test1");
     userInput.addVariable(var2, "test2");
-    telemetry.addData("Status", "Initialized");
+    telemetry.addData("Status", "Initialized");*/
   }
 
   /*
@@ -62,10 +62,10 @@ public class InputTest extends OpMode {
      */
   @Override
   public void init_loop() {
-    telemetry.addData("var1", var);
+    /*telemetry.addData("var1", var);
     telemetry.addData("var2", var2);
     var = userInput.getValue();
-    var2 = userInput.getValue();
+    var2 = userInput.getValue();*/
   }
 
   /*

@@ -61,10 +61,10 @@ public class Pak extends OpMode {
      }
      bot.close_hand();
      */
-     userInput = UserInput.getInstance();
+     /*userInput = UserInput.getInstance();
         userInput.setMaxValue(1000);
         userInput.setMinValue(0);
-     userInput.addVariable(servoPos, "servoPosition");
+     userInput.addVariable(servoPos, "servoPosition");*/
  }
 
  @Override
