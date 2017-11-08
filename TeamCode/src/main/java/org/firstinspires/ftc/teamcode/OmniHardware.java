@@ -66,11 +66,11 @@ public class OmniHardware
 
     // get user input
     private UserInput userInput;
+    private boolean isUIVisible = false;
 
     private double hand_open = 0.0;
     private double hand_closed = 0.25;
     private double afwijking = 0.0;
-
 
     // are the servo's and drive motors initiated
     private boolean isServoInit = false;
@@ -92,10 +92,12 @@ public class OmniHardware
         // servo's voor de hand
         hand_left = hwMap.get(Servo.class, "left_hand");
         hand_right = hwMap.get(Servo.class, "right_hand");
-        open_hand();
 
         // servo's have been initiated
         isServoInit = true;
+
+        open_hand();
+
     }
 
     public void initDriveMotors(){
@@ -133,10 +135,17 @@ public class OmniHardware
         userInput.setup();
 
         telemetry = _telemetry;
+
+        initDriveMotors();
+        initServos();
     }
 
     public void addVar(int var, String name, int range_min, int range_max){
         userInput.addVariable(var, name, range_min, range_max);
+
+        if(!isUIVisible){
+            userInput.showUI();
+        }
     }
 
     public void open_hand(){
@@ -161,18 +170,18 @@ public class OmniHardware
             hand_right.setPosition(1 - position + afwijking);
             sleep(1000);
             hand_left.getController().pwmDisable();
-        }else telemetry.addLine("servo's have not been initiated");
+        }else telemetry.addLine("servo's have not been initialized");
     }
 
     public void setLeftHandPosition(double position){
         if(isServoInit) {
             hand_left.setPosition(position);
-        }else telemetry.addLine("servo's have not been initiated");
+        }else telemetry.addLine("servo's have not been initialized");
     }
     public void setRightHandPosition(double position){
         if(isServoInit) {
             hand_right.setPosition(position);
-        }else telemetry.addLine("servo's have not been initiated");
+        }else telemetry.addLine("servo's have not been initialized");
     }
  }
 

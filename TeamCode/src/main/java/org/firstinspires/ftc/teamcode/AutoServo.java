@@ -64,14 +64,14 @@ public class AutoServo extends OpMode {
   public void init() {
     servo = hardwareMap.get(Servo.class, "left_hand");
     servo2 = hardwareMap.get(Servo.class, "right_hand");
-    userInput = UserInput.getInstance();
+    /*userInput = UserInput.getInstance();
     userInput.setup();
 
     userInput.setMinValue(0);
     userInput.setMaxValue(100);
 
     userInput.addVariable(speed, "servo speed");
-    telemetry.addData("Status", "Initialized");
+    telemetry.addData("Status", "Initialized");*/
   }
 
   /*

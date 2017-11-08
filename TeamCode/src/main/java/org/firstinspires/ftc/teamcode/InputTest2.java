@@ -41,12 +41,12 @@ import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 public class InputTest2 extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
-  private UserInput userInput;
   int var = 3;
 
   @Override
   public void init() {
     OmniHardware bot = new OmniHardware(this);
+    bot.addVar(var, "var", 0, 10);
   }
 
   /*
@@ -66,7 +66,6 @@ public class InputTest2 extends OpMode {
   @Override
   public void start() {
       runtime.reset();
-      userInput.hideUI();
   }
 
 
@@ -76,6 +75,7 @@ public class InputTest2 extends OpMode {
    */
   @Override
   public void loop() {
+    telemetry.addData("var", var);
     telemetry.addData("Status", "Run Time: " + runtime.toString());
   }
 
