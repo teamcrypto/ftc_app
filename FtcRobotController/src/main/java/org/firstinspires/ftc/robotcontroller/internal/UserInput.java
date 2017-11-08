@@ -38,6 +38,13 @@ public class UserInput {
         list.clear();
     }
 
+    public void setMaxValue(int value){
+        act.numberPicker.setMaxValue(value);
+    }
+
+    public void setMinValue(int value){
+        act.numberPicker.setMinValue(value);
+    }
 
     public void onItemSelected(int position, long id){
         act.numberPicker.setValue(list.get(position));
