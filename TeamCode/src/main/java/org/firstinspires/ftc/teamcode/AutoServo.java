@@ -31,85 +31,104 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 
 /**
- * This OpMode scans a single servo back and forwards until Stop is pressed.
- * The code is structured as a LinearOpMode
- * INCREMENT sets how much to increase/decrease the servo position each cycle
- * CYCLE_MS sets the update period.
- *
- * This code assumes a Servo configured with the name "left claw" as is found on a pushbot.
- *
- * NOTE: When any servo position is set, ALL attached servos are activated, so ensure that any other
- * connected servos are able to move freely before running this test.
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ * Demonstrates empty OpMode
  */
 @Autonomous(name = "Auto servo", group = "Concept")
 //@Disabled
-public class AutoServo extends LinearOpMode {
+public class AutoServo extends OpMode {
 
-    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   50;     // period of each cycle
-    static final double MAX_POS     =  1.0;     // Maximum rotational position
-    static final double MIN_POS     =  0.0;     // Minimum rotational position
+  static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+  static final int    CYCLE_MS    =   50;     // period of each cycle
+  static final double MAX_POS     =  0.4;     // Maximum rotational position
+  static final double MIN_POS     =  0.0;     // Minimum rotational position
+  int speed = 10;     // speed of the servo, determined by user input
 
-    // Define class members
-    Servo   servo;
-    double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
-    boolean rampUp = true;
+  // Define class members
+  Servo servo;
+  Servo servo2;
+  double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+  boolean rampUp = true;
 
+  private UserInput userInput;
 
-    @Override
-    public void runOpMode() {
+  private ElapsedTime runtime = new ElapsedTime();
 
-        // Connect to servo (Assume PushBot Left Hand)
-        // Change the text in quotes to match any servo name on your robot.
-        servo = hardwareMap.get(Servo.class, "left_hand");
+  @Override
+  public void init() {
+    servo = hardwareMap.get(Servo.class, "left_hand");
+    servo2 = hardwareMap.get(Servo.class, "right_hand");
+    userInput = UserInput.getInstance();
+    userInput.setup();
 
-        // Wait for the start button
-        telemetry.addData(">", "Press Start to scan Servo." );
-        telemetry.update();
-        waitForStart();
+    userInput.setMinValue(0);
+    userInput.setMaxValue(100);
 
+    userInput.addVariable(speed, "servo speed");
+    telemetry.addData("Status", "Initialized");
+  }
 
-        // Scan servo till stop pressed.
-        while(opModeIsActive()){
+  /*
+     * Code to run when the op mode is first enabled goes here
+     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+     */
+  @Override
+  public void init_loop() {
+    telemetry.addData("servo speed ", speed);
+    speed = userInput.getValue();
+  }
 
-            // slew the servo, according to the rampUp (direction) variable.
-            if (rampUp) {
-                // Keep stepping up until we hit the max value.
-                position += INCREMENT ;
-                if (position >= MAX_POS ) {
-                    position = MAX_POS;
-                    rampUp = !rampUp;   // Switch ramp direction
-                }
-            }
-            else {
-                // Keep stepping down until we hit the min value.
-                position -= INCREMENT ;
-                if (position <= MIN_POS ) {
-                    position = MIN_POS;
-                    rampUp = !rampUp;  // Switch ramp direction
-                }
-            }
+  /*
+   * This method will be called ONCE when start is pressed
+   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
+   */
+  @Override
+  public void start() {
+    runtime.reset();
+  }
 
-            // Display the current value
-            telemetry.addData("Servo Position", "%5.2f", position);
-            telemetry.addData(">", "Press Stop to end test." );
-            telemetry.update();
-
-            // Set the servo to the new position and pause;
-            servo.setPosition(position);
-            sleep(CYCLE_MS);
-            idle();
-        }
-
-        // Signal done;
-        telemetry.addData(">", "Done");
-        telemetry.update();
+  /*
+   * This method will be called repeatedly in a loop
+   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
+   */
+  @Override
+  public void loop() {
+    // slew the servo, according to the rampUp (direction) variable.
+    if (rampUp) {
+      // Keep stepping up until we hit the max value.
+      position += INCREMENT ;
+      if (position >= MAX_POS ) {
+        position = MAX_POS;
+        rampUp = !rampUp;   // Switch ramp direction
+      }
     }
+    else {
+      // Keep stepping down until we hit the min value.
+      position -= INCREMENT ;
+      if (position <= MIN_POS ) {
+        position = MIN_POS;
+        rampUp = !rampUp;  // Switch ramp direction
+      }
+    }
+
+
+
+    // Set the servo to the new position and pause;
+    servo.setPosition(position);
+    servo2.setPosition(1-position);
+    // Display the current value
+    telemetry.addData("Servo Position", "%5.2f", position);
+    telemetry.update();
+    try {
+      Thread.sleep((long) (CYCLE_MS * (10.0 / (((double) speed)))));
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
+  }
 }

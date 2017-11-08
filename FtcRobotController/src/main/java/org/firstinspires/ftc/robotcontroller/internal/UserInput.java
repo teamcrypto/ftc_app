@@ -15,6 +15,8 @@ public class UserInput {
     private FtcRobotControllerActivity act;
 
     private List<Integer> list = new ArrayList<Integer>();
+    private List<Integer> range_min = new ArrayList<Integer>();
+
 
     public static UserInput getInstance() {
         return ourInstance;
@@ -55,7 +57,7 @@ public class UserInput {
         }
     }
 
-    public void addVariable(Integer variable, String name){
+    public void addVariable(Integer variable, String name, int range_min, int range_max){
         list.add(variable);
         act.listItems.add(name);
         act.finishList();
@@ -83,4 +85,14 @@ public class UserInput {
     public void showUI(){
         act.showUI();
     }
+
+    public void setMaxValue(int value){
+        act.numberPicker.setMaxValue(value);
+    }
+
+    public void setMinValue(int value){
+        act.numberPicker.setMinValue(value);
+    }
+
+
 }

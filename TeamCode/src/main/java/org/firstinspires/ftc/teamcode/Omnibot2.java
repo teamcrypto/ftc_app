@@ -34,7 +34,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -50,44 +49,18 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="omnibot")
+@TeleOp(name="omnibot 2")
 //@Disabled
-public class Omnibot extends OpMode
+public class Omnibot2 extends OpMode
 {
-    // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor upDrive = null;
-    private DcMotor rightDrive = null;
-    private DcMotor leftDrive = null;
-    private DcMotor downDrive = null;
-    private Servo hand_left = null;
-    private Servo hand_right = null;
 
-    private double hand_open = 0.0;
-    private double hand_closed = 0.4;
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
+    OmniHardware bot = null;
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        upDrive = hardwareMap.get(DcMotor.class, "up_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
-        downDrive = hardwareMap.get(DcMotor.class, "down_drive");
-
-        // servo's vood de hand
-        hand_left = hardwareMap.get(Servo.class, "left_hand");
-        hand_right = hardwareMap.get(Servo.class, "right_hand");
-
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        downDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        bot = new OmniHardware(this);
+        bot.initServos();
+        bot.initDriveMotors();
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -100,26 +73,12 @@ public class Omnibot extends OpMode
     public void init_loop() {
     }
 
-
-    private void open_hand(){
-        setHandPosition(hand_open);
-    }
-
-    private void close_hand(){
-        setHandPosition(hand_closed);
-    }
-
-
-    private void setHandPosition(double position){
-        hand_left.setPosition(position);
-        hand_right.setPosition(1-position);
-    }
     /*
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
     public void start() {
-        runtime.reset();
+
     }
 
     /*
@@ -145,17 +104,17 @@ public class Omnibot extends OpMode
         // rightPower = -gamepad1.right_stick_y ;
 
         // Send calculated power to wheels
-        upDrive.setPower(xPower + turnpPower);
-        downDrive.setPower(xPower - turnpPower);
-        leftDrive.setPower(yPower - turnpPower);
-        rightDrive.setPower(yPower + turnpPower);
+        bot.upDrive.setPower(xPower + turnpPower);
+        bot.downDrive.setPower(xPower - turnpPower);
+        bot.leftDrive.setPower(yPower - turnpPower);
+        bot.rightDrive.setPower(yPower + turnpPower);
 
         if(gamepad1.x){
-            open_hand();
+            bot.open_hand();
         }
 
         if(gamepad1.b){
-            close_hand();
+            bot.close_hand();
         }
 
         /*if(gamepad1.y){
@@ -176,8 +135,10 @@ public class Omnibot extends OpMode
         }*/
 
         // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        //telemetry.addData("Status", "Run Time: " + bot.period.toString());
         //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        telemetry.addData("servo Pos", bot.hand_left.getPosition());
+        telemetry.update();
     }
 
     /*
