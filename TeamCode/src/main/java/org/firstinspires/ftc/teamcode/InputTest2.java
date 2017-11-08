@@ -46,12 +46,7 @@ public class InputTest2 extends OpMode {
 
   @Override
   public void init() {
-    userInput.setup();
-    userInput = UserInput.getInstance();
-
-
-    userInput.addVariable(var, "test1");
-    telemetry.addData("Status", "Initialized");
+    OmniHardware bot = new OmniHardware(this);
   }
 
   /*
@@ -60,10 +55,7 @@ public class InputTest2 extends OpMode {
      */
   @Override
   public void init_loop() {
-    telemetry.addData("var1", var);
-    telemetry.addData("var2", var2);
-    var = userInput.getValue();
-    var2 = userInput.getValue();
+
   }
 
   /*
@@ -85,13 +77,11 @@ public class InputTest2 extends OpMode {
   @Override
   public void loop() {
     telemetry.addData("Status", "Run Time: " + runtime.toString());
-    telemetry.addData("var1", var);
-    telemetry.addData("var2", var2);
   }
 
 
   @Override
   public void stop(){
-      userInput.hideUI();
+
   }
 }
