@@ -30,20 +30,19 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 
 
-@Autonomous(name = "inputTest", group = "Input")
+@Autonomous(name = "inputTest2", group = "Input")
 //@Disabled
-public class InputTest extends OpMode {
+public class InputTest2 extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
   private UserInput userInput;
-  Integer var = 3;Integer var2 = 6;
+  int var = 3;
 
   @Override
   public void init() {
@@ -52,7 +51,6 @@ public class InputTest extends OpMode {
 
 
     userInput.addVariable(var, "test1");
-    userInput.addVariable(var2, "test2");
     telemetry.addData("Status", "Initialized");
   }
 

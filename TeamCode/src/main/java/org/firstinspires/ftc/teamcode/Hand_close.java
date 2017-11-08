@@ -30,40 +30,25 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Demonstrates empty OpMode
  */
-@Autonomous(name = "Concept: NullOp", group = "Concept")
-@Disabled
-public class ConceptNullOp extends OpMode {
+@Autonomous(name = "Close hand", group = "Concept")
+//@Disabled
+public class Hand_close extends OpMode {
 
-  private ElapsedTime runtime = new ElapsedTime();
 
-  @Override
+  OmniHardware bot = null;
+
+
+    @Override
   public void init() {
-    telemetry.addData("Status", "Initialized");
-  }
-
-  /*
-     * Code to run when the op mode is first enabled goes here
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
-     */
-  @Override
-  public void init_loop() {
-  }
-
-  /*
-   * This method will be called ONCE when start is pressed
-   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
-   */
-  @Override
-  public void start() {
-    runtime.reset();
-  }
+     bot = new OmniHardware(this);
+     bot.initServos();
+     bot.close_hand();
+ }
 
   /*
    * This method will be called repeatedly in a loop
@@ -71,6 +56,7 @@ public class ConceptNullOp extends OpMode {
    */
   @Override
   public void loop() {
-    telemetry.addData("Status", "Run Time: " + runtime.toString());
+    // Display the current value
+    telemetry.update();
   }
 }

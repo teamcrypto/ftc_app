@@ -34,7 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -50,21 +51,19 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="omnibot")
+@TeleOp(name="servo")
 //@Disabled
-public class Omnibot extends OpMode
+public class ServoWithController extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor upDrive = null;
-    private DcMotor rightDrive = null;
-    private DcMotor leftDrive = null;
-    private DcMotor downDrive = null;
     private Servo hand_left = null;
     private Servo hand_right = null;
+    private UserInput userInput;
 
     private double hand_open = 0.0;
-    private double hand_closed = 0.4;
+    private double hand_closed = 0.5;
+    private int hand_closed_int = 50;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -72,22 +71,15 @@ public class Omnibot extends OpMode
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        upDrive = hardwareMap.get(DcMotor.class, "up_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
-        downDrive = hardwareMap.get(DcMotor.class, "down_drive");
+        userInput = UserInput.getInstance();
+        userInput.addVariable(hand_closed_int, "closed_position", 0, 10);
 
         // servo's vood de hand
         hand_left = hardwareMap.get(Servo.class, "left_hand");
         hand_right = hardwareMap.get(Servo.class, "right_hand");
 
+        userInput.showUI();
         // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        downDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -128,6 +120,8 @@ public class Omnibot extends OpMode
     @Override
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
+        hand_closed_int = userInput.getValue();
+        hand_closed = (double)hand_closed_int / 100;
 
         double xPower = gamepad1.left_stick_x;
         double yPower = gamepad1.left_stick_y;
@@ -144,11 +138,6 @@ public class Omnibot extends OpMode
         // leftPower  = -gamepad1.left_stick_y ;
         // rightPower = -gamepad1.right_stick_y ;
 
-        // Send calculated power to wheels
-        upDrive.setPower(xPower + turnpPower);
-        downDrive.setPower(xPower - turnpPower);
-        leftDrive.setPower(yPower - turnpPower);
-        rightDrive.setPower(yPower + turnpPower);
 
         if(gamepad1.x){
             open_hand();

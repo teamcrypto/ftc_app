@@ -30,55 +30,27 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 
-
-@Autonomous(name = "inputTest", group = "Input")
+/**
+ * Demonstrates empty OpMode
+ */
+@Autonomous(name = "Open hand", group = "Concept")
 //@Disabled
-public class InputTest extends OpMode {
+public class Hand_open extends OpMode {
 
-  private ElapsedTime runtime = new ElapsedTime();
-  private UserInput userInput;
-  Integer var = 3;Integer var2 = 6;
 
-  @Override
+  OmniHardware bot = null;
+
+
+    @Override
   public void init() {
-    userInput.setup();
-    userInput = UserInput.getInstance();
-
-
-    userInput.addVariable(var, "test1");
-    userInput.addVariable(var2, "test2");
-    telemetry.addData("Status", "Initialized");
-  }
-
-  /*
-     * Code to run when the op mode is first enabled goes here
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
-     */
-  @Override
-  public void init_loop() {
-    telemetry.addData("var1", var);
-    telemetry.addData("var2", var2);
-    var = userInput.getValue();
-    var2 = userInput.getValue();
-  }
-
-  /*
-   * This method will be called ONCE when start is pressed
-   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
-   */
-
-  @Override
-  public void start() {
-      runtime.reset();
-      userInput.hideUI();
-  }
-
+     bot = new OmniHardware(this);
+     bot.initServos();
+     bot.open_hand();
+ }
 
   /*
    * This method will be called repeatedly in a loop
@@ -86,14 +58,7 @@ public class InputTest extends OpMode {
    */
   @Override
   public void loop() {
-    telemetry.addData("Status", "Run Time: " + runtime.toString());
-    telemetry.addData("var1", var);
-    telemetry.addData("var2", var2);
-  }
-
-
-  @Override
-  public void stop(){
-      userInput.hideUI();
+    // Display the current value
+    telemetry.update();
   }
 }
