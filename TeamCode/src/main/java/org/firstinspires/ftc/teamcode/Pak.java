@@ -30,9 +30,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 
@@ -40,7 +39,7 @@ import org.firstinspires.ftc.robotcontroller.internal.UserInput;
  * Demonstrates empty OpMode
  */
 @Autonomous(name = "Pak", group = "Concept")
-//@Disabled
+@Disabled
 public class Pak extends OpMode {
 
 
@@ -52,7 +51,7 @@ public class Pak extends OpMode {
     @Override
   public void init() {
      bot = new OmniHardware(this);
-     bot.initServos();
+     bot.initArm();
      /*bot.open_hand();
      try {
          Thread.sleep(2000);

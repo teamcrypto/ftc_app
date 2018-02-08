@@ -15,6 +15,11 @@ public class UserInput {
     private FtcRobotControllerActivity act;
 
     private List<Integer> list = new ArrayList<Integer>();
+    private List<Double> listDouble = new ArrayList<Double>();
+    private List<Integer> min_vals = new ArrayList<Integer>();
+    private List<Integer> max_vals = new ArrayList<Integer>();
+    private List<String> names = new ArrayList<String>();
+    private List<String> namesDouble = new ArrayList<String>();
 
 
     public static UserInput getInstance() {
@@ -47,6 +52,8 @@ public class UserInput {
 
     public void onItemSelected(int position, long id){
         act.numberPicker.setValue(list.get(position));
+        act.numberPicker.setMinValue(min_vals.get(position));
+        act.numberPicker.setMaxValue(max_vals.get(position));
     }
 
     public void onValueChange(Integer newVal){
@@ -56,10 +63,50 @@ public class UserInput {
         }
     }
 
-    public void addVariable(Integer variable, String name, int range_min, int range_max){
-        list.add(variable);
+    public void addVariable(Integer default_value, String name, int range_min, int range_max){
+        list.add(default_value);
+        min_vals.add(range_min);
+        max_vals.add(range_max);
+        names.add(name);
         act.listItems.add(name);
         act.finishList();
+    }
+
+    public void addVariable(Double default_value, String name, int range_min, int range_max){
+        listDouble.add(default_value);
+        min_vals.add(range_min);
+        max_vals.add(range_max);
+        namesDouble.add(name);
+        act.listItems.add(name);
+        act.finishList();
+    }
+
+    public double get(String name){
+        int index = names.indexOf(name);
+        if(index != -1){
+            return ((double) list.get(index));
+        }else{
+            index = namesDouble.indexOf(name);
+            if(index == -1){
+                throw new NullPointerException();
+            }else {
+                return listDouble.get(index);
+            }
+        }
+    }
+
+    public double getDouble(String name){
+        int index = names.indexOf(name);
+        if(index != -1){
+            return ((double) list.get(index)) / ((double) max_vals.get(index));
+        }else{
+            index = namesDouble.indexOf(name);
+            if(index == -1){
+                throw new NullPointerException();
+            }else {
+                return listDouble.get(index);
+            }
+        }
     }
 
     public boolean isButtonReleased() {

@@ -30,59 +30,39 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 
 
-@Autonomous(name = "inputTest2", group = "Input")
-@Disabled
-public class InputTest2 extends OpMode {
+/**
+ * This file contains an example of an iterative (Non-Linear) "OpMode".
+ * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
+ * The names of OpModes appear on the menu of the FTC Driver Station.
+ * When an selection is made from the menu, the corresponding OpMode
+ * class is instantiated on the Robot Controller and executed.
+ *
+ * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
+ * It includes all the skeletal structure that all iterative OpModes contain.
+ *
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ */
 
-  private ElapsedTime runtime = new ElapsedTime();
-  int var = 3;
-  OmniHardware bot;
-  @Override
-  public void init() {
-     bot = new OmniHardware(this);
-    bot.addVar(3, "var", 0, 10);
-  }
+@Autonomous(name="encoder")
+//@Disabled
+public class encoders extends LinearOpMode
+{
+    OmniHardware bot = null;
 
-  /*
-     * Code to run when the op mode is first enabled goes here
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
-     */
-  @Override
-  public void init_loop() {
+    @Override
+    public void runOpMode(){
+        bot = new OmniHardware(this);
+        bot.initDriveMotors();
 
-  }
-
-  /*
-   * This method will be called ONCE when start is pressed
-   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
-   */
-
-  @Override
-  public void start() {
-      runtime.reset();
-  }
+        bot.testEncoders();
+        telemetry.update();
+    }
 
 
-  /*
-   * This method will be called repeatedly in a loop
-   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
-   */
-  @Override
-  public void loop() {
-    telemetry.addData("var", bot.get("var"));
-    telemetry.addData("Status", "Run Time: " + runtime.toString());
-  }
 
-
-  @Override
-  public void stop(){
-
-  }
 }
