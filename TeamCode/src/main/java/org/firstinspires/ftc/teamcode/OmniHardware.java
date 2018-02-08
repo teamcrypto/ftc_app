@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -39,21 +40,27 @@ import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
- * This is NOT an opmode.
- *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
- *
- * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
+ * This class definis all the hardware and functions needed for the competition.
  *
  * Motor channel:  Left  drive motor:        "left_drive"
  * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
+ * Motor channel:  Top drive motor:          "up_drive"
+ * Motor channel:  Bottom drive motor:       "down_drive"
+ * Motor channel:  Manipulator drive motor:  "arm"
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
+
+/**
+ * TODO
+ * - moveWithEncoder(Motor, distance)
+ * - driveUp(distance) can also be used to drive down
+ * using encoders
+ * - driveRight(distance) can also be used to drive left
+ *
+ *
+ */
+
 public class OmniHardware
 {
     /* Public OpMode members. */
@@ -61,6 +68,7 @@ public class OmniHardware
     public DcMotor rightDrive = null;
     public DcMotor leftDrive = null;
     public DcMotor downDrive = null;
+    public DcMotor arm = null;
     public Servo hand_left = null;
     public Servo hand_right = null;
 
@@ -80,15 +88,19 @@ public class OmniHardware
     /* local OpMode members. */
     HardwareMap hwMap           =   null;
     Telemetry telemetry         =   null;
+    LinearOpMode opMode         =   null;
     public ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
     public OmniHardware(OpMode opMode){
         init(opMode.hardwareMap, opMode.telemetry);
     }
+    public OmniHardware(LinearOpMode lOpMode) {
+        opMode = lOpMode;
+        init(lOpMode.hardwareMap, lOpMode.telemetry);
+    }
 
-
-    public void initServos(){
+    public void initArm(){
         // servo's voor de hand
         hand_left = hwMap.get(Servo.class, "left_hand");
         hand_right = hwMap.get(Servo.class, "right_hand");
@@ -100,20 +112,53 @@ public class OmniHardware
 
     }
 
+    public void testEncoders(){
+        telemetry.addData("Status:", "resetting encoders");
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        telemetry.addData("Status:", "setting mode");
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Tell the driver that initialization is complete.
+        telemetry.addData("Status:", "Initialized");
+        telemetry.update();
+
+        opMode.waitForStart();
+
+        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftDrive.setPower(0.2);
+
+        final double     COUNTS_PER_MOTOR_REV    = 32176/30 *1.04; // = 1073    // eg: TETRIX Motor Encoder
+
+        int counts = (int) (COUNTS_PER_MOTOR_REV * 2.0);
+        telemetry.addData("counst", counts);
+        telemetry.update();
+        sleep(1000);
+        leftDrive.setTargetPosition(leftDrive.getCurrentPosition()+counts);
+        while(opMode.opModeIsActive() && leftDrive.isBusy()) {
+            telemetry.addData("pos", leftDrive.getCurrentPosition());
+            telemetry.update();
+        }
+
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     public void initDriveMotors(){
         upDrive = hwMap.get(DcMotor.class, "up_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
         leftDrive = hwMap.get(DcMotor.class, "left_drive");
         downDrive = hwMap.get(DcMotor.class, "down_drive");
+        //arm = hwMap.get(DcMotor.class, "arm");
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Set the direction of the motors so that if the rotate forward the robot  turns clockwise
         downDrive.setDirection(DcMotor.Direction.FORWARD);
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        upDrive.setDirection(DcMotor.Direction.REVERSE);
+
 
         // Set all motors to zero power
         leftDrive.setPower(0);
@@ -137,7 +182,7 @@ public class OmniHardware
         telemetry = _telemetry;
 
         initDriveMotors();
-        initServos();
+        initArm();
     }
 
     public void addVar(int var, String name, int range_min, int range_max){
@@ -164,12 +209,22 @@ public class OmniHardware
         }
     }
 
+    public int get(String name){
+        return ((int) userInput.get(name));
+    }
+
+    public double getdouble(String name, double maxVal){
+        return userInput.getDouble(name) * maxVal;
+    }
+
+    public double getdouble(String name){
+        return userInput.getDouble(name);
+    }
+
     public void setHandPosition(double position){
         if(isServoInit) {
             hand_left.setPosition(position);
             hand_right.setPosition(1 - position + afwijking);
-            sleep(1000);
-            hand_left.getController().pwmDisable();
         }else telemetry.addLine("servo's have not been initialized");
     }
 

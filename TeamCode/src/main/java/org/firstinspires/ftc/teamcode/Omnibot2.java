@@ -31,9 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -59,7 +57,7 @@ public class Omnibot2 extends OpMode
     public void init() {
 
         bot = new OmniHardware(this);
-        bot.initServos();
+        //bot.initArm();
         bot.initDriveMotors();
 
         // Tell the driver that initialization is complete.
@@ -90,6 +88,25 @@ public class Omnibot2 extends OpMode
 
         double xPower = gamepad1.left_stick_x;
         double yPower = gamepad1.left_stick_y;
+
+        double rotation = Math.atan2(yPower, xPower);
+        double lenght = Math.sqrt(Math.pow(xPower, 2) + Math.pow(yPower, 2));  // pythagoras
+
+        telemetry.addData("rotation: ", rotation);
+        telemetry.addData("lenght: ", lenght);
+
+        rotation += (2* Math.PI) / 8;
+
+        double newXPower = lenght * Math.cos(rotation);
+        double newYPower = lenght * Math.sin(rotation);
+
+        telemetry.addData("old x: ", xPower);
+        telemetry.addData("new x: ", newXPower);
+        telemetry.addData("old y: ", yPower);
+        telemetry.addData("new y: ", newYPower);
+
+        xPower = newXPower;
+        yPower = newYPower;
         double turnpPower = gamepad1.right_stick_x;
 
         // Choose to drive using either Tank Mode, or POV Mode
@@ -106,32 +123,37 @@ public class Omnibot2 extends OpMode
         // Send calculated power to wheels
         bot.upDrive.setPower(xPower + turnpPower);
         bot.downDrive.setPower(xPower - turnpPower);
-        bot.leftDrive.setPower(yPower - turnpPower);
-        bot.rightDrive.setPower(yPower + turnpPower);
+        bot.leftDrive.setPower(yPower + turnpPower);
+        bot.rightDrive.setPower(yPower - turnpPower);
 
         if(gamepad1.x){
-            bot.open_hand();
+            //bot.open_hand();
         }
 
         if(gamepad1.b){
-            bot.close_hand();
+            //bot.close_hand();
         }
 
-        /*if(gamepad1.y){
-            upDrive.setPower(1);
+        if(gamepad1.y){
+            bot.upDrive.setPower(1);
             telemetry.addData("up ", 1);
         }
         if(gamepad1.b){
-            rightDrive.setPower(1);
+            bot.rightDrive.setPower(1);
             telemetry.addData("right ", 1);
         }
         if(gamepad1.a) {
-            downDrive.setPower(1);
+            bot.downDrive.setPower(1);
             telemetry.addData("down ", 1);
         }
-        if(gamepad1.x){
-            leftDrive.setPower(1);
+        if(gamepad1.dpad_up){
+            bot.leftDrive.setPower(1);
             telemetry.addData("left ", 1);
+        }
+        /*
+        if(gamepad1.dpad_down){
+            bot.leftDrive.setPower(-1);
+            telemetry.addData("left backward", 1);
         }*/
 
         // Show the elapsed game time and wheel power.

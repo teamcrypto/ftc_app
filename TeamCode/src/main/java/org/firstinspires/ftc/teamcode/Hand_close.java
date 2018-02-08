@@ -30,13 +30,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /**
  * Demonstrates empty OpMode
  */
 @Autonomous(name = "Close hand", group = "Concept")
-//@Disabled
+@Disabled
 public class Hand_close extends OpMode {
 
 
@@ -46,7 +47,7 @@ public class Hand_close extends OpMode {
     @Override
   public void init() {
      bot = new OmniHardware(this);
-     bot.initServos();
+     bot.initArm();
      bot.close_hand();
  }
 

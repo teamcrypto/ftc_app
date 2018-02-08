@@ -29,9 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -51,7 +53,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="omnibot")
-//@Disabled
+@Disabled
 public class Omnibot extends OpMode
 {
     // Declare OpMode members.
@@ -60,6 +62,7 @@ public class Omnibot extends OpMode
     private DcMotor rightDrive = null;
     private DcMotor leftDrive = null;
     private DcMotor downDrive = null;
+    private DcMotor armMotor = null;
     private Servo hand_left = null;
     private Servo hand_right = null;
 
@@ -80,15 +83,17 @@ public class Omnibot extends OpMode
         leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         downDrive = hardwareMap.get(DcMotor.class, "down_drive");
 
-        // servo's vood de hand
+        // servo's voor de hand
         hand_left = hardwareMap.get(Servo.class, "left_hand");
         hand_right = hardwareMap.get(Servo.class, "right_hand");
+        // motor for the arm
+        armMotor = hardwareMap.get(DcMotor.class, "arm");
+
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         downDrive.setDirection(DcMotor.Direction.FORWARD);
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
-
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
     }

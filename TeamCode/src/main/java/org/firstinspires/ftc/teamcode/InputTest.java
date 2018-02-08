@@ -38,7 +38,7 @@ import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 
 
 @Autonomous(name = "inputTest", group = "Input")
-//@Disabled
+@Disabled
 public class InputTest extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
