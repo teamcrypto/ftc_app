@@ -123,17 +123,18 @@ public class OmniHardware
             int newPos = motor.getCurrentPosition() + ticks;
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setTargetPosition(newPos);
-            motor.setPower(0.2);
+            motor.setPower(power);
         }
 
-        boolean isBusy;
-        while(opMode.opModeIsActive() && isBusy) {
+        boolean isBusy = false;
+        do {
             for (DcMotor motor :
                     motors) {
                 telemetry.addData("motor position", motor.getCurrentPosition());
                 telemetry.addData("target position", motor.getTargetPosition());
+                isBusy = isBusy || motor.isBusy();
             }
-        }
+        }while(opMode.opModeIsActive() && isBusy);
         telemetry.update();
 
         for (DcMotor motor :
