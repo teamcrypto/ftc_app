@@ -39,6 +39,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.util.ArrayList;
+
 /**
  * This class definis all the hardware and functions needed for the competition.
  *
@@ -80,9 +82,12 @@ public class OmniHardware
     private double hand_closed = 0.25;
     private double afwijking = 0.0;
 
-    // are the servo's and drive motors initiated
+    // are the servo's and drive motors initiated ?
     private boolean isServoInit = false;
     private boolean isDriveInit = false;
+
+    // variables for using encoders
+    static final double     COUNTS_PER_MOTOR_REV    = 32176/30 *1.04;  // the example variables didn't works so well for us
 
 
     /* local OpMode members. */
@@ -112,6 +117,31 @@ public class OmniHardware
 
     }
 
+    public void encoderDrive(double power, int ticks, ArrayList<DcMotor> motors){
+        for (DcMotor motor:
+             motors) {
+            int newPos = motor.getCurrentPosition() + ticks;
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setTargetPosition(newPos);
+            motor.setPower(0.2);
+        }
+
+        boolean isBusy;
+        while(opMode.opModeIsActive() && isBusy) {
+            for (DcMotor motor :
+                    motors) {
+                telemetry.addData("motor position", motor.getCurrentPosition());
+                telemetry.addData("target position", motor.getTargetPosition());
+            }
+        }
+        telemetry.update();
+
+        for (DcMotor motor :
+                motors) {
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
     public void testEncoders(){
         telemetry.addData("Status:", "resetting encoders");
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -127,7 +157,6 @@ public class OmniHardware
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftDrive.setPower(0.2);
 
-        final double     COUNTS_PER_MOTOR_REV    = 32176/30 *1.04; // = 1073    // eg: TETRIX Motor Encoder
 
         int counts = (int) (COUNTS_PER_MOTOR_REV * 2.0);
         telemetry.addData("counst", counts);
@@ -149,10 +178,17 @@ public class OmniHardware
         downDrive = hwMap.get(DcMotor.class, "down_drive");
         //arm = hwMap.get(DcMotor.class, "arm");
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
+        // reset the encoders
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        downDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        upDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // turn on the encoders
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        downDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        upDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Set the direction of the motors so that if the rotate forward the robot  turns clockwise
         downDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -168,7 +204,6 @@ public class OmniHardware
 
         // drive motors have been initiated
         isDriveInit = true;
-
     }
 
     /* Initialize standard Hardware interfaces */
