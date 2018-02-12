@@ -40,17 +40,19 @@ import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-/**
- * This class definis all the hardware and functions needed for the competition.
- *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Top drive motor:          "up_drive"
- * Motor channel:  Bottom drive motor:       "down_drive"
- * Motor channel:  Manipulator drive motor:  "arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
+/*
+  This class defines all the hardware and functions needed for the competition.
+
+  Motor channel:  Left  drive motor:        "left_drive"
+  Motor channel:  Right drive motor:        "right_drive"
+  Motor channel:  Top drive motor:          "up_drive"
+  Motor channel:  Bottom drive motor:       "down_drive"
+  Motor channel:  Manipulator drive motor:  "arm"
+  Servo channel:  Servo to open left claw:  "left_hand"
+  Servo channel:  Servo to open right claw: "right_hand"
  */
 
 /**
@@ -66,17 +68,16 @@ import java.util.ArrayList;
 public class OmniHardware
 {
     /* Public OpMode members. */
-    public DcMotor upDrive = null;
-    public DcMotor rightDrive = null;
-    public DcMotor leftDrive = null;
-    public DcMotor downDrive = null;
-    public DcMotor arm = null;
-    public Servo hand_left = null;
-    public Servo hand_right = null;
+    private DcMotor upDrive = null;
+    private DcMotor rightDrive = null;
+    private DcMotor leftDrive = null;
+    private DcMotor downDrive = null;
+    private DcMotor arm = null;
+    private Servo hand_left = null;
+    private Servo hand_right = null;
 
     // get user input
     private UserInput userInput;
-    private boolean isUIVisible = false;
 
     private double hand_open = 0.0;
     private double hand_closed = 0.25;
@@ -87,15 +88,15 @@ public class OmniHardware
     private boolean isDriveInit = false;
 
     // variables for using encoders
-    static final double     COUNTS_PER_MOTOR_REV    = 32176/30 *1.04;  // the example variables didn't works so well for us
+    private static final double     COUNTS_PER_MOTOR_REV    = 32176/30 *1.04;  // the example variables didn't works so well for us
 
 
     /* local OpMode members. */
-    HardwareMap hwMap           =   null;
+    private HardwareMap hwMap           =   null;
     Telemetry telemetry         =   null;
-    LinearOpMode opMode         =   null;
+    private LinearOpMode opMode         =   null;
     public ElapsedTime period  = new ElapsedTime();
-    ArrayList<DcMotor> motors;  // motors ready to move
+    private ArrayList<DcMotor> motors;  // motors ready to move
 
     /* Constructor */
     public OmniHardware(OpMode opMode){
@@ -110,6 +111,8 @@ public class OmniHardware
         // servo's voor de hand
         hand_left = hwMap.get(Servo.class, "left_hand");
         hand_right = hwMap.get(Servo.class, "right_hand");
+
+        arm = hwMap.get(DcMotor.class, "arm");
 
         // servo's have been initiated
         isServoInit = true;
@@ -146,6 +149,14 @@ public class OmniHardware
         }
         motors.addAll(_motors);
 
+    }
+
+    public void driveForward(double power, int ticks){
+        ArrayList<DcMotor> motors = new ArrayList<>(2);
+        motors.add(leftDrive);
+        motors.add(rightDrive);
+        encoderDrive(power, ticks, motors);
+        startDrive();
     }
 
     public void testEncoders(){
@@ -229,6 +240,7 @@ public class OmniHardware
     public void addVar(int var, String name, int range_min, int range_max){
         userInput.addVariable(var, name, range_min, range_max);
 
+        boolean isUIVisible = false;
         if(!isUIVisible){
             userInput.showUI();
         }

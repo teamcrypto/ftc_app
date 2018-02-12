@@ -48,7 +48,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="encoder")
+@Autonomous(name="encoder test full")
 //@Disabled
 public class encoders extends LinearOpMode
 {
@@ -59,7 +59,7 @@ public class encoders extends LinearOpMode
         bot = new OmniHardware(this);
         bot.initDriveMotors();
 
-        bot.testEncoders();
+        bot.driveForward(0.5, 1000);
         telemetry.update();
     }
 
