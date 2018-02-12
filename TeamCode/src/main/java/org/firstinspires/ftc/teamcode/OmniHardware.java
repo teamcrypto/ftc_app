@@ -95,6 +95,7 @@ public class OmniHardware
     Telemetry telemetry         =   null;
     LinearOpMode opMode         =   null;
     public ElapsedTime period  = new ElapsedTime();
+    ArrayList<DcMotor> motors;  // motors ready to move
 
     /* Constructor */
     public OmniHardware(OpMode opMode){
@@ -117,15 +118,7 @@ public class OmniHardware
 
     }
 
-    public void encoderDrive(double power, int ticks, ArrayList<DcMotor> motors){
-        for (DcMotor motor:
-             motors) {
-            int newPos = motor.getCurrentPosition() + ticks;
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motor.setTargetPosition(newPos);
-            motor.setPower(power);
-        }
-
+    public void startDrive(){
         boolean isBusy = false;
         do {
             for (DcMotor motor :
@@ -141,6 +134,18 @@ public class OmniHardware
                 motors) {
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+    }
+
+    public void encoderDrive(double power, int ticks, ArrayList<DcMotor> _motors){
+        for (DcMotor motor:
+             _motors) {
+            int newPos = motor.getCurrentPosition() + ticks;
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setTargetPosition(newPos);
+            motor.setPower(power);
+        }
+        motors.addAll(_motors);
+
     }
 
     public void testEncoders(){
