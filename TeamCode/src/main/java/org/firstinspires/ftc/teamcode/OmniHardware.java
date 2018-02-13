@@ -68,13 +68,13 @@ import java.util.List;
 public class OmniHardware
 {
     /* Public OpMode members. */
-    private DcMotor upDrive = null;
-    private DcMotor rightDrive = null;
-    private DcMotor leftDrive = null;
-    private DcMotor downDrive = null;
-    private DcMotor arm = null;
-    private Servo hand_left = null;
-    private Servo hand_right = null;
+    DcMotor upDrive = null;
+    DcMotor rightDrive = null;
+    DcMotor leftDrive = null;
+    DcMotor downDrive = null;
+    DcMotor arm = null;
+    Servo hand_left = null;
+    Servo hand_right = null;
 
     // get user input
     private UserInput userInput;
@@ -117,7 +117,7 @@ public class OmniHardware
         // servo's have been initiated
         isServoInit = true;
 
-        open_hand();
+        //open_hand();
 
     }
 
@@ -139,9 +139,9 @@ public class OmniHardware
         }
     }
 
-    public void encoderDrive(double power, int ticks, ArrayList<DcMotor> _motors){
-        for (DcMotor motor:
-             _motors) {
+    public void encoderDrive(double power, int ticks, ArrayList<DcMotor> _motors) {
+        for (DcMotor motor :
+                _motors) {
             int newPos = motor.getCurrentPosition() + ticks;
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setTargetPosition(newPos);
@@ -160,32 +160,7 @@ public class OmniHardware
     }
 
     public void testEncoders(){
-        telemetry.addData("Status:", "resetting encoders");
-        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        telemetry.addData("Status:", "setting mode");
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // Tell the driver that initialization is complete.
-        telemetry.addData("Status:", "Initialized");
-        telemetry.update();
-
-        opMode.waitForStart();
-
-        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftDrive.setPower(0.2);
-
-
-        int counts = (int) (COUNTS_PER_MOTOR_REV * 2.0);
-        telemetry.addData("counst", counts);
-        telemetry.update();
-        sleep(1000);
-        leftDrive.setTargetPosition(leftDrive.getCurrentPosition()+counts);
-        while(opMode.opModeIsActive() && leftDrive.isBusy()) {
-            telemetry.addData("pos", leftDrive.getCurrentPosition());
-            telemetry.update();
-        }
-
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveForward(0.5, 1200);
     }
 
     public void initDriveMotors(){

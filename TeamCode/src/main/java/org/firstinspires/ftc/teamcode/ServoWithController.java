@@ -57,13 +57,7 @@ public class ServoWithController extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private Servo hand_left = null;
-    private Servo hand_right = null;
-    private UserInput userInput;
-
-    private double hand_open = 0.0;
-    private double hand_closed = 0.5;
-    private int hand_closed_int = 50;
+    OmniHardware bot = new OmniHardware(this);
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -71,14 +65,7 @@ public class ServoWithController extends OpMode
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        userInput = UserInput.getInstance();
-        userInput.addVariable(hand_closed_int, "closed_position", 0, 10);
-
-        // servo's vood de hand
-        hand_left = hardwareMap.get(Servo.class, "left_hand");
-        hand_right = hardwareMap.get(Servo.class, "right_hand");
-
-        userInput.showUI();
+        bot.initArm();
         // Most robots need the motor on one side to be reversed to drive forward
 
         // Tell the driver that initialization is complete.
@@ -92,23 +79,6 @@ public class ServoWithController extends OpMode
     public void init_loop() {
     }
 
-
-    private void open_hand(){
-        setHandPosition(hand_open);
-    }
-
-    private void close_hand(){
-        setHandPosition(hand_closed);
-    }
-
-
-    private void setHandPosition(double position){
-        hand_left.setPosition(position);
-        hand_right.setPosition(1-position);
-    }
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
     @Override
     public void start() {
         runtime.reset();
@@ -119,59 +89,21 @@ public class ServoWithController extends OpMode
      */
     @Override
     public void loop() {
-        // Setup a variable for each drive wheel to save power level for telemetry
-        hand_closed_int = userInput.getValue();
-        hand_closed = (double)hand_closed_int / 100;
-
-        double xPower = gamepad1.left_stick_x;
-        double yPower = gamepad1.left_stick_y;
-        double turnpPower = gamepad1.right_stick_x;
-
-        // Choose to drive using either Tank Mode, or POV Mode
-        // Comment out the method that's not used.  The default below is POV.
-
-        // POV Mode uses left stick to go forward, and right stick to turn.
-        // - This uses basic math to combine motions and is easier to drive straight.
-
-        // Tank Mode uses one stick to control each wheel.
-        // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // leftPower  = -gamepad1.left_stick_y ;
-        // rightPower = -gamepad1.right_stick_y ;
 
 
         if(gamepad1.x){
-            open_hand();
+            bot.open_hand();
         }
 
         if(gamepad1.b){
-            close_hand();
+            bot.close_hand();
         }
 
-        /*if(gamepad1.y){
-            upDrive.setPower(1);
-            telemetry.addData("up ", 1);
-        }
-        if(gamepad1.b){
-            rightDrive.setPower(1);
-            telemetry.addData("right ", 1);
-        }
-        if(gamepad1.a) {
-            downDrive.setPower(1);
-            telemetry.addData("down ", 1);
-        }
-        if(gamepad1.x){
-            leftDrive.setPower(1);
-            telemetry.addData("left ", 1);
-        }*/
 
-        // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
+
     @Override
     public void stop() {
     }
