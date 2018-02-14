@@ -96,7 +96,7 @@ public class OmniHardware
     Telemetry telemetry         =   null;
     private LinearOpMode opMode         =   null;
     public ElapsedTime period  = new ElapsedTime();
-    private ArrayList<DcMotor> motors;  // motors ready to move
+    private ArrayList<DcMotor> motors = new ArrayList<>(0);  // motors ready to move
 
     /* Constructor */
     public OmniHardware(OpMode opMode){
@@ -152,10 +152,10 @@ public class OmniHardware
     }
 
     public void driveForward(double power, int ticks){
-        ArrayList<DcMotor> motors = new ArrayList<>(2);
-        motors.add(leftDrive);
-        motors.add(rightDrive);
-        encoderDrive(power, ticks, motors);
+        ArrayList<DcMotor> _motors = new ArrayList<>(2);
+        _motors.add(leftDrive);
+        _motors.add(rightDrive);
+        encoderDrive(power, ticks, _motors);
         startDrive();
     }
 

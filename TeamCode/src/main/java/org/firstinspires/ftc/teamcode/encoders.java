@@ -57,10 +57,9 @@ public class encoders extends LinearOpMode
     @Override
     public void runOpMode(){
         bot = new OmniHardware(this);
-        bot.initDriveMotors();
 
         waitForStart();
-        bot.driveForward(0.5, 1000);
+        bot.testEncoders();
         telemetry.update();
     }
 
