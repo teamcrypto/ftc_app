@@ -122,41 +122,46 @@ public class OmniHardware
     }
 
     public void startDrive(){
-        boolean isBusy = false;
-        do {
+        if(checkDriveInit()) {
+            boolean isBusy = false;
+            do {
+                for (DcMotor motor :
+                        motors) {
+                    telemetry.addData("motor position", motor.getCurrentPosition());
+                    telemetry.addData("target position", motor.getTargetPosition());
+                    isBusy = isBusy || motor.isBusy();
+                }
+            } while (opMode.opModeIsActive() && isBusy);
+            telemetry.update();
+
             for (DcMotor motor :
                     motors) {
-                telemetry.addData("motor position", motor.getCurrentPosition());
-                telemetry.addData("target position", motor.getTargetPosition());
-                isBusy = isBusy || motor.isBusy();
+                motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
-        }while(opMode.opModeIsActive() && isBusy);
-        telemetry.update();
-
-        for (DcMotor motor :
-                motors) {
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 
     public void encoderDrive(double power, int ticks, ArrayList<DcMotor> _motors) {
-        for (DcMotor motor :
-                _motors) {
-            int newPos = motor.getCurrentPosition() + ticks;
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motor.setTargetPosition(newPos);
-            motor.setPower(power);
+        if(checkDriveInit()) {
+            for (DcMotor motor :
+                    _motors) {
+                int newPos = motor.getCurrentPosition() + ticks;
+                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motor.setTargetPosition(newPos);
+                motor.setPower(power);
+            }
+            motors.addAll(_motors);
         }
-        motors.addAll(_motors);
-
     }
 
     public void driveForward(double power, int ticks){
-        ArrayList<DcMotor> _motors = new ArrayList<>(2);
-        _motors.add(leftDrive);
-        _motors.add(rightDrive);
-        encoderDrive(power, ticks, _motors);
-        startDrive();
+        if(checkDriveInit()) {
+            ArrayList<DcMotor> _motors = new ArrayList<>(2);
+            _motors.add(leftDrive);
+            _motors.add(rightDrive);
+            encoderDrive(power, ticks, _motors);
+            startDrive();
+        }
     }
 
     public void testEncoders(){
@@ -247,6 +252,13 @@ public class OmniHardware
 
     public double getdouble(String name){
         return userInput.getDouble(name);
+    }
+
+    boolean checkDriveInit(){
+        if(!isDriveInit){
+            telemetry.addLine("Drive motors have not been initialized");
+        }
+        return isDriveInit;
     }
 
     public void setHandPosition(double position){

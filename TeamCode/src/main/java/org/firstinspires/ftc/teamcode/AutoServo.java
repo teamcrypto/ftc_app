@@ -37,11 +37,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 
-/**
- * Demonstrates empty OpMode
- */
+
 @Autonomous(name = "Auto servo", group = "Concept")
-//@Disabled
+@Disabled
 public class AutoServo extends OpMode {
 
   static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
@@ -56,7 +54,6 @@ public class AutoServo extends OpMode {
   double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
   boolean rampUp = true;
 
-  private UserInput userInput;
 
   private ElapsedTime runtime = new ElapsedTime();
 
@@ -80,8 +77,6 @@ public class AutoServo extends OpMode {
      */
   @Override
   public void init_loop() {
-    telemetry.addData("servo speed ", speed);
-    speed = userInput.getValue();
   }
 
   /*
