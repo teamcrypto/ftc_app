@@ -86,8 +86,19 @@ public class OmniHardware
     // get user input
     private UserInput userInput;
 
+    // servo positions
+    private double right_hand_open = 0.25;
+    private double right_hand_closed = 0.60;
+    private double left_hand_closed = 0.1;
+    private double left_hand_open = 0.25;
+
+
+
     private double hand_open = 0.0;
+
     private double hand_closed = 0.25;
+
+
     private double afwijking = 0.0;
 
     // are the servo's and drive motors initiated ?
@@ -141,20 +152,20 @@ public class OmniHardware
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
          */
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        //VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
         // OR...  Do Not Activate the Camera Monitor View, to save power
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-        parameters.vuforiaLicenseKey = "Ac8kPcD/////AAAAmbjJEPHIc0ROkLMyrtU5YfYeF2HqcJNbo3TFfD0uG5fvI6mxgsqq9FA+4/BRd9qTGEgQ7Kae0UvNHb+2xcrpF7wLweLO17Be04HSBWONX/6tAZ9Uzjzx/Av/BWIYo4/0/c+BfIdbKmUGm9jEXJgcsJj7wwkmTGYa+gSiQZCGr3k9/MWdX3Y/jM0PyxFUgHyh3YT0MBelWc2LaSlitQ68L3As/QGfnpvTTBdOs8YsKkNYNMB9ALmIfwKcOq2E5NnA2Cf/N1nX3efZEB3XWm0ql8WHmpjBD/ThvoqOn+qNasTYn1x9Hg2NMXwiJZqktJMSKRBdRfJqdyomV1iKXyVlVxpHFUYSTiiTvXkIIEYB4FC4";
+        //parameters.vuforiaLicenseKey = "Ac8kPcD/////AAAAmbjJEPHIc0ROkLMyrtU5YfYeF2HqcJNbo3TFfD0uG5fvI6mxgsqq9FA+4/BRd9qTGEgQ7Kae0UvNHb+2xcrpF7wLweLO17Be04HSBWONX/6tAZ9Uzjzx/Av/BWIYo4/0/c+BfIdbKmUGm9jEXJgcsJj7wwkmTGYa+gSiQZCGr3k9/MWdX3Y/jM0PyxFUgHyh3YT0MBelWc2LaSlitQ68L3As/QGfnpvTTBdOs8YsKkNYNMB9ALmIfwKcOq2E5NnA2Cf/N1nX3efZEB3XWm0ql8WHmpjBD/ThvoqOn+qNasTYn1x9Hg2NMXwiJZqktJMSKRBdRfJqdyomV1iKXyVlVxpHFUYSTiiTvXkIIEYB4FC4";
 
         /*
          * We also indicate which camera on the RC that we wish to use.
          * Here we chose the back (HiRes) camera (for greater range), but
          * for a competition robot, the front camera might be more convenient.
          */
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        //parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        //this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         /**
          * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
@@ -162,9 +173,9 @@ public class OmniHardware
          * but differ in their instance id information.
          * @see VuMarkInstanceId
          */
-        relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        /*relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary*/
     }
 
     public void printPatternId(){
@@ -294,11 +305,13 @@ public class OmniHardware
     }
 
     public void open_hand(){
-        setHandPosition(hand_open);
+        setLeftHandPosition(left_hand_open);
+        setRightHandPosition(right_hand_open);
     }
 
     public void close_hand(){
-        setHandPosition(hand_closed);
+        setLeftHandPosition(left_hand_closed);
+        setRightHandPosition(right_hand_closed);
     }
 
     public void sleep(long ms){

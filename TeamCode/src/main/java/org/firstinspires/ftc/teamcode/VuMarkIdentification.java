@@ -69,8 +69,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 //@Disabled
 public class VuMarkIdentification extends LinearOpMode {
 
-    OmniHardware bot = new OmniHardware(this);
+    OmniHardware bot = null;
     @Override public void runOpMode() {
+        bot = new OmniHardware(this);
         bot.initVuMark();
         telemetry.addData(">", "Press Play to start");
         telemetry.update();

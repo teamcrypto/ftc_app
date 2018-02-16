@@ -57,17 +57,13 @@ public class ServoWithController extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    OmniHardware bot = new OmniHardware(this);
+    OmniHardware bot = null;
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
-
-        bot.initArm();
-        // Most robots need the motor on one side to be reversed to drive forward
-
+         bot = new OmniHardware(this);
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
     }

@@ -30,14 +30,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
-@Autonomous(name="example")
-@Disabled
-public class example extends LinearOpMode
+@Autonomous(name="auto servo 2")
+//@Disabled
+public class auto_servo_2 extends LinearOpMode
 {
     OmniHardware bot = null;
 
@@ -47,6 +46,10 @@ public class example extends LinearOpMode
 
         waitForStart();
 
+        bot.open_hand();
+        sleep(2000);
+        bot.close_hand();
+        sleep(2000);
         telemetry.update();
     }
 
