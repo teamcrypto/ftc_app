@@ -150,15 +150,16 @@ public class Omnibot2 extends OpMode
             bot.leftDrive.setPower(1);
             telemetry.addData("left ", 1);
         }
-        /*
-        if(gamepad1.dpad_down){
-            bot.leftDrive.setPower(-1);
-            telemetry.addData("left backward", 1);
-        }*/
 
-        // Show the elapsed game time and wheel power.
-        //telemetry.addData("Status", "Run Time: " + bot.period.toString());
-        //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        // set arm position
+        if(gamepad1.left_bumper){
+            bot.arm.setPower(-0.3);
+        }
+        if(gamepad1.right_bumper){
+            bot.arm.setPower(0.3);
+        }
+
+        telemetry.addData("arm position", bot.arm.getCurrentPosition());
         telemetry.addData("servo Pos", bot.hand_left.getPosition());
         telemetry.update();
     }

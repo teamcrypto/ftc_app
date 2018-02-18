@@ -52,24 +52,15 @@ import java.util.List;
 
 /*
   This class defines all the hardware and functions needed for the competition.
+  The robot is a omnibot. This means it can move in all directions without rotation.
 
   Motor channel:  Left  drive motor:        "left_drive"
   Motor channel:  Right drive motor:        "right_drive"
   Motor channel:  Top drive motor:          "up_drive"
   Motor channel:  Bottom drive motor:       "down_drive"
-  Motor channel:  Manipulator drive motor:  "arm"
+  Motor channel:  Arm drive motor:  "arm"
   Servo channel:  Servo to open left claw:  "left_hand"
   Servo channel:  Servo to open right claw: "right_hand"
- */
-
-/**
- * TODO
- * - moveWithEncoder(Motor, distance)
- * - driveUp(distance) can also be used to drive down
- * using encoders
- * - driveRight(distance) can also be used to drive left
- *
- *
  */
 
 public class OmniHardware
@@ -124,12 +115,57 @@ public class OmniHardware
 
 
     /* Constructor */
-    public OmniHardware(OpMode opMode){
-        init(opMode.hardwareMap, opMode.telemetry);
-    }
-    public OmniHardware(LinearOpMode lOpMode) {
+    public OmniHardware(OpMode opMode){ init(opMode.hardwareMap, opMode.telemetry); }
+    /*public OmniHardware(LinearOpMode lOpMode) {
         opMode = lOpMode;
         init(lOpMode.hardwareMap, lOpMode.telemetry);
+    }*/
+
+    /* Initialize standard Hardware interfaces */
+    public void init(HardwareMap ahwMap, Telemetry _telemetry) {
+        // Save reference to Hardware map
+        hwMap = ahwMap;
+
+        userInput = UserInput.getInstance();
+        userInput.setup();
+
+        telemetry = _telemetry;
+
+        initDriveMotors();
+        initArm();
+    }
+
+    public void initDriveMotors(){
+        upDrive = hwMap.get(DcMotor.class, "up_drive");
+        rightDrive = hwMap.get(DcMotor.class, "right_drive");
+        leftDrive = hwMap.get(DcMotor.class, "left_drive");
+        downDrive = hwMap.get(DcMotor.class, "down_drive");
+
+        // reset the encoders
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        downDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        upDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // turn on the encoders
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        downDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        upDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Set the direction of the motors so that if the motors rotate forward the robot turns clockwise
+        downDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        upDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        // Set all motors to zero power
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
+        downDrive.setPower(0);
+        upDrive.setPower(0);
+
+        // drive motors have been initiated
+        isDriveInit = true;
     }
 
     public void initArm(){
@@ -139,11 +175,15 @@ public class OmniHardware
 
         arm = hwMap.get(DcMotor.class, "arm");
 
+        // reset the encoders
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // turn on the encoders
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        arm.setPower(0);
+
         // servo's have been initiated
         isServoInit = true;
-
-        //open_hand();
-
     }
 
     public void initVuMark(){
@@ -246,54 +286,7 @@ public class OmniHardware
         driveForward(0.5, 1200);
     }
 
-    public void initDriveMotors(){
-        upDrive = hwMap.get(DcMotor.class, "up_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        leftDrive = hwMap.get(DcMotor.class, "left_drive");
-        downDrive = hwMap.get(DcMotor.class, "down_drive");
-        //arm = hwMap.get(DcMotor.class, "arm");
 
-        // reset the encoders
-        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        downDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        upDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // turn on the encoders
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        downDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        upDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // Set the direction of the motors so that if the rotate forward the robot  turns clockwise
-        downDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        upDrive.setDirection(DcMotor.Direction.REVERSE);
-
-
-        // Set all motors to zero power
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
-        downDrive.setPower(0);
-        upDrive.setPower(0);
-
-        // drive motors have been initiated
-        isDriveInit = true;
-    }
-
-    /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap, Telemetry _telemetry) {
-        // Save reference to Hardware map
-        hwMap = ahwMap;
-
-        userInput = UserInput.getInstance();
-        userInput.setup();
-
-        telemetry = _telemetry;
-
-        initDriveMotors();
-        initArm();
-    }
 
     public void addVar(int var, String name, int range_min, int range_max){
         userInput.addVariable(var, name, range_min, range_max);
