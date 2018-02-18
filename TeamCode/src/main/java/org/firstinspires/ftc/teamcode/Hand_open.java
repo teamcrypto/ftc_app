@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  * Demonstrates empty OpMode
  */
 @Autonomous(name = "Open hand", group = "Concept")
-@Disabled
+//@Disabled
 public class Hand_open extends OpMode {
 
 
@@ -47,7 +47,6 @@ public class Hand_open extends OpMode {
     @Override
   public void init() {
      bot = new OmniHardware(this);
-     bot.initArm();
      bot.open_hand();
  }
 

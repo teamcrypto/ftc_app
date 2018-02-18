@@ -44,7 +44,6 @@ public class arm extends LinearOpMode
     @Override
     public void runOpMode(){
         bot = new OmniHardware(this);
-        bot.initArm();
 
         waitForStart();
 

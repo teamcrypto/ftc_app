@@ -27,48 +27,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.old;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.internal.UserInput;
+import org.firstinspires.ftc.teamcode.OmniHardware;
 
 
-@Autonomous(name = "Auto servo", group = "Concept")
+@Autonomous(name = "inputTest2", group = "Input")
 @Disabled
-public class AutoServo extends OpMode {
-
-  static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-  static final int    CYCLE_MS    =   50;     // period of each cycle
-  static final double MAX_POS     =  0.4;     // Maximum rotational position
-  static final double MIN_POS     =  0.0;     // Minimum rotational position
-  int speed = 10;     // speed of the servo, determined by user input
-
-  // Define class members
-  Servo servo;
-  Servo servo2;
-  double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
-  boolean rampUp = true;
-
+public class InputTest2 extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
-
+  int var = 3;
+  OmniHardware bot;
   @Override
   public void init() {
-    servo = hardwareMap.get(Servo.class, "left_hand");
-    servo2 = hardwareMap.get(Servo.class, "right_hand");
-    /*userInput = UserInput.getInstance();
-    userInput.setup();
-
-    userInput.setMinValue(0);
-    userInput.setMaxValue(100);
-
-    userInput.addVariable(speed, "servo speed");
-    telemetry.addData("Status", "Initialized");*/
+     bot = new OmniHardware(this);
+    bot.addVar(3, "var", 0, 10);
   }
 
   /*
@@ -77,16 +57,19 @@ public class AutoServo extends OpMode {
      */
   @Override
   public void init_loop() {
+
   }
 
   /*
    * This method will be called ONCE when start is pressed
    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
    */
+
   @Override
   public void start() {
-    runtime.reset();
+      runtime.reset();
   }
+
 
   /*
    * This method will be called repeatedly in a loop
@@ -94,36 +77,13 @@ public class AutoServo extends OpMode {
    */
   @Override
   public void loop() {
-    // slew the servo, according to the rampUp (direction) variable.
-    if (rampUp) {
-      // Keep stepping up until we hit the max value.
-      position += INCREMENT ;
-      if (position >= MAX_POS ) {
-        position = MAX_POS;
-        rampUp = !rampUp;   // Switch ramp direction
-      }
-    }
-    else {
-      // Keep stepping down until we hit the min value.
-      position -= INCREMENT ;
-      if (position <= MIN_POS ) {
-        position = MIN_POS;
-        rampUp = !rampUp;  // Switch ramp direction
-      }
-    }
+    telemetry.addData("var", bot.get("var"));
+    telemetry.addData("Status", "Run Time: " + runtime.toString());
+  }
 
 
+  @Override
+  public void stop(){
 
-    // Set the servo to the new position and pause;
-    servo.setPosition(position);
-    servo2.setPosition(1-position);
-    // Display the current value
-    telemetry.addData("Servo Position", "%5.2f", position);
-    telemetry.update();
-    try {
-      Thread.sleep((long) (CYCLE_MS * (10.0 / (((double) speed)))));
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-    }
   }
 }

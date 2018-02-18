@@ -48,7 +48,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="encoder test full")
+@Autonomous(name="Test: encoders", group = "test")
 //@Disabled
 public class encoders extends LinearOpMode
 {

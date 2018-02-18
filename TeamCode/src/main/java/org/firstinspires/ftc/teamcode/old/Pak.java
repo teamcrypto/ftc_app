@@ -27,48 +27,51 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.old;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.internal.UserInput;
+import org.firstinspires.ftc.teamcode.OmniHardware;
 
-
-@Autonomous(name = "inputTest2", group = "Input")
+/**
+ * Demonstrates empty OpMode
+ */
+@Autonomous(name = "Pak", group = "Concept")
 @Disabled
-public class InputTest2 extends OpMode {
+public class Pak extends OpMode {
 
-  private ElapsedTime runtime = new ElapsedTime();
-  int var = 3;
-  OmniHardware bot;
-  @Override
+
+  OmniHardware bot = null;
+    UserInput userInput = null;
+    private Integer servoPos = 100;
+
+
+    @Override
   public void init() {
      bot = new OmniHardware(this);
-    bot.addVar(3, "var", 0, 10);
-  }
-
-  /*
-     * Code to run when the op mode is first enabled goes here
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+     bot.initArm();
+     /*bot.open_hand();
+     try {
+         Thread.sleep(2000);
+     } catch (InterruptedException e) {
+         Thread.currentThread().interrupt();
+     }
+     bot.close_hand();
      */
-  @Override
-  public void init_loop() {
+     /*userInput = UserInput.getInstance();
+        userInput.setMaxValue(1000);
+        userInput.setMinValue(0);
+     userInput.addVariable(servoPos, "servoPosition");*/
+ }
 
-  }
-
-  /*
-   * This method will be called ONCE when start is pressed
-   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
-   */
-
-  @Override
-  public void start() {
-      runtime.reset();
-  }
-
+ @Override
+ public void init_loop(){
+     bot.setRightHandPosition(((double) servoPos / 1000.0));
+     telemetry.addData("servo pos", servoPos);
+ }
 
   /*
    * This method will be called repeatedly in a loop
@@ -76,13 +79,7 @@ public class InputTest2 extends OpMode {
    */
   @Override
   public void loop() {
-    telemetry.addData("var", bot.get("var"));
-    telemetry.addData("Status", "Run Time: " + runtime.toString());
-  }
-
-
-  @Override
-  public void stop(){
-
+    // Display the current value
+    telemetry.update();
   }
 }

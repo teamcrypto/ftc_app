@@ -27,50 +27,58 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.old;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 
-/**
- * Demonstrates empty OpMode
- */
-@Autonomous(name = "Pak", group = "Concept")
+
+@Autonomous(name = "inputTest", group = "Input")
 @Disabled
-public class Pak extends OpMode {
+public class InputTest extends OpMode {
 
+  private ElapsedTime runtime = new ElapsedTime();
+  private UserInput userInput;
+  Integer var = 3;Integer var2 = 6;
 
-  OmniHardware bot = null;
-    UserInput userInput = null;
-    private Integer servoPos = 100;
-
-
-    @Override
+  @Override
   public void init() {
-     bot = new OmniHardware(this);
-     bot.initArm();
-     /*bot.open_hand();
-     try {
-         Thread.sleep(2000);
-     } catch (InterruptedException e) {
-         Thread.currentThread().interrupt();
-     }
-     bot.close_hand();
-     */
-     /*userInput = UserInput.getInstance();
-        userInput.setMaxValue(1000);
-        userInput.setMinValue(0);
-     userInput.addVariable(servoPos, "servoPosition");*/
- }
+    userInput.setup();
+    userInput = UserInput.getInstance();
 
- @Override
- public void init_loop(){
-     bot.setRightHandPosition(((double) servoPos / 1000.0));
-     telemetry.addData("servo pos", servoPos);
- }
+
+   /*userInput.addVariable(var, "test1");
+    userInput.addVariable(var2, "test2");
+    telemetry.addData("Status", "Initialized");*/
+  }
+
+  /*
+     * Code to run when the op mode is first enabled goes here
+     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+     */
+  @Override
+  public void init_loop() {
+    /*telemetry.addData("var1", var);
+    telemetry.addData("var2", var2);
+    var = userInput.getValue();
+    var2 = userInput.getValue();*/
+  }
+
+  /*
+   * This method will be called ONCE when start is pressed
+   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
+   */
+
+  @Override
+  public void start() {
+      runtime.reset();
+      userInput.hideUI();
+  }
+
 
   /*
    * This method will be called repeatedly in a loop
@@ -78,7 +86,14 @@ public class Pak extends OpMode {
    */
   @Override
   public void loop() {
-    // Display the current value
-    telemetry.update();
+    telemetry.addData("Status", "Run Time: " + runtime.toString());
+    telemetry.addData("var1", var);
+    telemetry.addData("var2", var2);
+  }
+
+
+  @Override
+  public void stop(){
+      userInput.hideUI();
   }
 }

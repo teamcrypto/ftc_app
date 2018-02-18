@@ -34,7 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
-@Autonomous(name="auto servo 2")
+@Autonomous(name="Test: servo", group = "test")
 //@Disabled
 public class auto_servo_2 extends LinearOpMode
 {

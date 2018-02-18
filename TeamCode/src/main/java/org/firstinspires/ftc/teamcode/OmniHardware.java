@@ -52,7 +52,9 @@ import java.util.List;
 
 /*
   This class defines all the hardware and functions needed for the competition.
-  The robot is a omnibot. This means it can move in all directions without rotation.
+  This is NOT an opmode
+
+  The robot this class is used for is a omnibot. This means it can move in all directions without rotation.
 
   Motor channel:  Left  drive motor:        "left_drive"
   Motor channel:  Right drive motor:        "right_drive"
