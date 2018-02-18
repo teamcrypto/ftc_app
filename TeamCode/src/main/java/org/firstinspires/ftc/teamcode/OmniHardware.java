@@ -29,26 +29,25 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.VuMarkTargetResult;
 
 import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /*
   This class defines all the hardware and functions needed for the competition.
@@ -60,7 +59,7 @@ import java.util.List;
   Motor channel:  Right drive motor:        "right_drive"
   Motor channel:  Top drive motor:          "up_drive"
   Motor channel:  Bottom drive motor:       "down_drive"
-  Motor channel:  Arm drive motor:  "arm"
+  Motor channel:  Arm drive motor:          "arm"
   Servo channel:  Servo to open left claw:  "left_hand"
   Servo channel:  Servo to open right claw: "right_hand"
  */
@@ -118,10 +117,10 @@ public class OmniHardware
 
     /* Constructor */
     public OmniHardware(OpMode opMode){ init(opMode.hardwareMap, opMode.telemetry); }
-    /*public OmniHardware(LinearOpMode lOpMode) {
+    public OmniHardware(LinearOpMode lOpMode) {
         opMode = lOpMode;
         init(lOpMode.hardwareMap, lOpMode.telemetry);
-    }*/
+    }
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap, Telemetry _telemetry) {
@@ -188,6 +187,37 @@ public class OmniHardware
         isServoInit = true;
     }
 
+    public RelicRecoveryVuMark recognizeTarget(){
+        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "Ac8kPcD/////AAAAmbjJEPHIc0ROkLMyrtU5YfYeF2HqcJNbo3TFfD0uG5fvI6mxgsqq9FA+4/BRd9qTGEgQ7Kae0UvNHb+2xcrpF7wLweLO17Be04HSBWONX/6tAZ9Uzjzx/Av/BWIYo4/0/c+BfIdbKmUGm9jEXJgcsJj7wwkmTGYa+gSiQZCGr3k9/MWdX3Y/jM0PyxFUgHyh3YT0MBelWc2LaSlitQ68L3As/QGfnpvTTBdOs8YsKkNYNMB9ALmIfwKcOq2E5NnA2Cf/N1nX3efZEB3XWm0ql8WHmpjBD/ThvoqOn+qNasTYn1x9Hg2NMXwiJZqktJMSKRBdRfJqdyomV1iKXyVlVxpHFUYSTiiTvXkIIEYB4FC4";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        //waitForStart();
+        relicTrackables.activate();
+
+        RelicRecoveryVuMark result = RelicRecoveryVuMark.UNKNOWN;
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+        while (timer.milliseconds() < 2000) {
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+                result = vuMark;
+                telemetry.addData("VuMark", "%s visible", vuMark);
+            }
+            else {
+                telemetry.addData("VuMark", "not visible");
+            }
+
+            telemetry.update();
+        }
+        return result;
+    }
+
+
     public void initVuMark(){
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
@@ -214,7 +244,7 @@ public class OmniHardware
          * in this data set: all three of the VuMarks in the game were created from this one template,
          * but differ in their instance id information.
          * @see VuMarkInstanceId
-         */
+         **/
         /*relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary*/
