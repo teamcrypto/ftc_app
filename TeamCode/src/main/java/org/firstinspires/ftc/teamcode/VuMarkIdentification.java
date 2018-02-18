@@ -65,7 +65,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
-@Autonomous(name="Test: VuMark in class", group ="test")
+@Autonomous(name="Test: pattern recognition in class", group ="test")
 //@Disabled
 public class VuMarkIdentification extends LinearOpMode {
 
@@ -75,9 +75,6 @@ public class VuMarkIdentification extends LinearOpMode {
         bot.initVuMark();
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
-        while(!isStarted() && !isStopRequested()){
-            bot.printPatternId();
-        }
         waitForStart();
         while (opModeIsActive()) {
             telemetry.addData("robot remember this mark", bot.getPatternId());

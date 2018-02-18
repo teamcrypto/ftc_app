@@ -80,10 +80,10 @@ public class OmniHardware
     private UserInput userInput;
 
     // servo positions
-    private double right_hand_open = 0.25;
-    private double right_hand_closed = 0.60;
-    private double left_hand_closed = 0.1;
-    private double left_hand_open = 0.25;
+    double right_hand_open = 0.25;
+    double right_hand_closed = 0.60;
+    double left_hand_closed = 0.1;
+    double left_hand_open = 0.25;
 
 
 
