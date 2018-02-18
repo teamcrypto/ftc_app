@@ -55,12 +55,7 @@ import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 //@Disabled
 public class ServoWithController extends OpMode
 {
-    // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
     OmniHardware bot = null;
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
     @Override
     public void init() {
          bot = new OmniHardware(this);
@@ -68,40 +63,14 @@ public class ServoWithController extends OpMode
         telemetry.addData("Status", "Initialized");
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
-    }
-
-    @Override
-    public void start() {
-        runtime.reset();
-    }
-
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
     @Override
     public void loop() {
-
-
-        if(gamepad1.x){
+        if (gamepad1.x) {
             bot.open_hand();
         }
 
-        if(gamepad1.b){
+        if (gamepad1.b) {
             bot.close_hand();
         }
-
-
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
     }
-
-
-    @Override
-    public void stop() {
-    }
-
 }
