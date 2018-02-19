@@ -48,7 +48,7 @@ public class auto_servo_2 extends LinearOpMode
 
         bot.open_hand();
         sleep(2000);
-        bot.close_hand();
+        //bot.close_hand();
         sleep(2000);
         telemetry.update();
     }

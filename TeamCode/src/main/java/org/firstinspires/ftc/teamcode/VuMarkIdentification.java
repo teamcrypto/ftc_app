@@ -71,13 +71,14 @@ public class VuMarkIdentification extends LinearOpMode {
 
     OmniHardware bot = null;
     @Override public void runOpMode() {
-        bot = new OmniHardware(this);
-        bot.initVuMark();
+        bot = new OmniHardware(this);;
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
         waitForStart();
+        RelicRecoveryVuMark target = bot.recognizeTarget();
+
         while (opModeIsActive()) {
-            telemetry.addData("robot remember this mark", bot.getPatternId());
+            telemetry.addData("target: ", target);
         }
     }
 
