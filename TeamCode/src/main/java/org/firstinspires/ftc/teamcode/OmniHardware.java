@@ -84,6 +84,9 @@ public class OmniHardware
     double left_hand_closed = 0.4;
     double left_hand_open = 0.6;
 
+    double arm_up = 2800;
+    double arm_down = 0;
+
 
 
     private double hand_open = 0.0;

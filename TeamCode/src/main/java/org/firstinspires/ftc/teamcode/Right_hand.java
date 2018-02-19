@@ -46,6 +46,7 @@ public class Right_hand extends OpMode {
  @Override
  public void start(){
      bot.setRightHandPosition(bot.right_hand_closed);
+     bot.sleep(1000);
  }
 
   /*

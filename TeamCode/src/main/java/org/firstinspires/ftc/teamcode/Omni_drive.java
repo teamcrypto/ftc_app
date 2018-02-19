@@ -51,6 +51,8 @@ public class Omni_drive extends OpMode
         telemetry.addData("Status", "Initialized");
     }
 
+    int count_without = 0;
+
     @Override
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
@@ -96,11 +98,11 @@ public class Omni_drive extends OpMode
         bot.rightDrive.setPower(yPower - turnpPower);
 
         if(gamepad1.x){
-            //bot.open_hand();
+            bot.open_hand();
         }
 
         if(gamepad1.b){
-            //bot.close_hand();
+            bot.close_hand();
         }
 
         if(gamepad1.y){
@@ -120,16 +122,23 @@ public class Omni_drive extends OpMode
             telemetry.addData("left ", 1);
         }
 
+        if(count_without <= 0) {
+            bot.arm.setPower(0);
+        }
         // set arm position
         if(gamepad1.left_bumper){
             bot.arm.setPower(-0.3);
+            count_without = 10;
         }
         if(gamepad1.right_bumper){
             bot.arm.setPower(0.3);
+            count_without = 10;
         }
-
+        if(count_without > -10) count_without --;
         telemetry.addData("arm position", bot.arm.getCurrentPosition());
         telemetry.addData("servo Pos", bot.hand_left.getPosition());
+        telemetry.addData("count without", count_without);
+
         telemetry.update();
     }
 

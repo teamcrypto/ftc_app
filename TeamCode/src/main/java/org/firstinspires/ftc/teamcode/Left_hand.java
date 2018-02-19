@@ -40,13 +40,13 @@ public class Left_hand extends OpMode {
     @Override
   public void init() {
      bot = new OmniHardware(this);
- }
+     bot.setLeftHandPosition(bot.left_hand_open);
+    }
 
  @Override
  public void start(){
-        bot.setLeftHandPosition(bot.left_hand_open);
-        bot.sleep(2000);
-        bot.setLeftHandPosition(bot.left_hand_closed);
+     bot.setLeftHandPosition(bot.left_hand_closed);
+     bot.sleep(2000);
  }
 
   /*

@@ -43,13 +43,11 @@ public class auto_servo_2 extends LinearOpMode
     @Override
     public void runOpMode(){
         bot = new OmniHardware(this);
+        bot.open_hand();
 
         waitForStart();
-
-        bot.open_hand();
-        sleep(2000);
-        //bot.close_hand();
-        sleep(2000);
+        bot.close_hand();
+        sleep(1000);
         telemetry.update();
     }
 
