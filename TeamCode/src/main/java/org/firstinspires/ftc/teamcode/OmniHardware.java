@@ -81,8 +81,8 @@ public class OmniHardware
     // servo positions
     double right_hand_open = 0.6;
     double right_hand_closed = 0.25;
-    double left_hand_closed = 0.4;
-    double left_hand_open = 0.6;
+    double left_hand_closed = 0.8;
+    double left_hand_open = 0.4;
 
     double arm_up = 2800;
     double arm_down = 0;
@@ -190,6 +190,16 @@ public class OmniHardware
         isServoInit = true;
     }
 
+    public void moveArmUp(){
+        encoderDrive(0.2, 500, arm);
+        startDrive();
+    }
+
+    public void moveArmDown(){
+        //setEncoderPosition(0.3, 1000, arm);
+        //startDrive();
+    }
+
     public RelicRecoveryVuMark recognizeTarget(){
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -278,47 +288,63 @@ public class OmniHardware
         if(checkDriveInit()) {
             boolean isBusy = false;
             do {
+                isBusy = false;
                 for (DcMotor motor :
                         motors) {
                     telemetry.addData("motor position", motor.getCurrentPosition());
                     telemetry.addData("target position", motor.getTargetPosition());
+                    telemetry.update();
                     isBusy = isBusy || motor.isBusy();
                 }
             } while (opMode.opModeIsActive() && isBusy);
-            telemetry.update();
 
             for (DcMotor motor :
                     motors) {
                 motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motor.setPower(0);
             }
         }
     }
 
-    public void encoderDrive(double power, int ticks, ArrayList<DcMotor> _motors) {
+    public void encoderDrive(double power, int ticks, DcMotor motor) {
         if(checkDriveInit()) {
-            for (DcMotor motor :
-                    _motors) {
-                int newPos = motor.getCurrentPosition() + ticks;
-                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motor.setTargetPosition(newPos);
-                motor.setPower(power);
-            }
-            motors.addAll(_motors);
+            int newPos = motor.getCurrentPosition() + ticks;
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setTargetPosition(newPos);
+            motor.setPower(power);
+            motors.add(motor);
+        }
+    }
+
+    public void setEncoderPosition(double power, int position, DcMotor motor){
+        if(checkDriveInit()) {
+            int newPos = position;
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setTargetPosition(newPos);
+            motor.setPower(power);
+            motors.add(motor);
         }
     }
 
     public void driveForward(double power, int ticks){
         if(checkDriveInit()) {
-            ArrayList<DcMotor> _motors = new ArrayList<>(2);
-            _motors.add(leftDrive);
-            _motors.add(rightDrive);
-            encoderDrive(power, ticks, _motors);
+            //encoderDrive(power, ticks, upDrive);
+            encoderDrive(power, ticks, downDrive);
+            //encoderDrive(power, ticks, leftDrive);
+            encoderDrive(power, ticks, rightDrive);
+
             startDrive();
         }
     }
 
     public void testEncoders(){
-        driveForward(0.5, 1200);
+        driveForward(0.4, 1000);
+        /*int newPos = upDrive.getCurrentPosition() + 1000;
+        upDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        upDrive.setTargetPosition(newPos);
+        upDrive.setPower(0.5);
+        motors.add(upDrive);
+        startDrive();*/
     }
 
 
