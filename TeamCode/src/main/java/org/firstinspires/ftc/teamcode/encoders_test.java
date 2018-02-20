@@ -58,7 +58,7 @@ public class encoders_test extends LinearOpMode
 
     @Override
     public void runOpMode() {
-        motor = hardwareMap.get(DcMotor.class, "t");
+        motor = hardwareMap.get(DcMotor.class, "up_drive");
         telemetry.addData("Status:", "resetting encoders");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         telemetry.addData("Status:", "setting mode");

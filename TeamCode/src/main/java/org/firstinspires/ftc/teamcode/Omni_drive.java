@@ -58,7 +58,7 @@ public class Omni_drive extends OpMode
         // Setup a variable for each drive wheel to save power level for telemetry
 
         double xPower = gamepad1.left_stick_x;
-        double yPower = gamepad1.left_stick_y;
+        double yPower = -gamepad1.left_stick_y;
 
         double rotation = Math.atan2(yPower, xPower);
         double lenght = Math.sqrt(Math.pow(xPower, 2) + Math.pow(yPower, 2));  // pythagoras
@@ -66,6 +66,7 @@ public class Omni_drive extends OpMode
         telemetry.addData("rotation: ", rotation);
         telemetry.addData("lenght: ", lenght);
 
+        // rotate the stick input by 45 degrees
         rotation += (2* Math.PI) / 8;
 
         double newXPower = lenght * Math.cos(rotation);
@@ -79,17 +80,6 @@ public class Omni_drive extends OpMode
         xPower = newXPower;
         yPower = newYPower;
         double turnpPower = gamepad1.right_stick_x;
-
-        // Choose to drive using either Tank Mode, or POV Mode
-        // Comment out the method that's not used.  The default below is POV.
-
-        // POV Mode uses left stick to go forward, and right stick to turn.
-        // - This uses basic math to combine motions and is easier to drive straight.
-
-        // Tank Mode uses one stick to control each wheel.
-        // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // leftPower  = -gamepad1.left_stick_y ;
-        // rightPower = -gamepad1.right_stick_y ;
 
         // Send calculated power to wheels
         bot.upDrive.setPower(xPower + turnpPower);
@@ -105,19 +95,19 @@ public class Omni_drive extends OpMode
             bot.close_hand();
         }
 
-        if(gamepad1.y){
+        if(gamepad1.dpad_up){
             bot.upDrive.setPower(1);
             telemetry.addData("up ", 1);
         }
-        if(gamepad1.b){
+        if(gamepad1.dpad_right){
             bot.rightDrive.setPower(1);
             telemetry.addData("right ", 1);
         }
-        if(gamepad1.a) {
+        if(gamepad1.dpad_down) {
             bot.downDrive.setPower(1);
             telemetry.addData("down ", 1);
         }
-        if(gamepad1.dpad_up){
+        if(gamepad1.dpad_left){
             bot.leftDrive.setPower(1);
             telemetry.addData("left ", 1);
         }
