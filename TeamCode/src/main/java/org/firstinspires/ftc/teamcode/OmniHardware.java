@@ -81,7 +81,7 @@ public class OmniHardware
     // servo positions
     double right_hand_open = 0.6;
     double right_hand_closed = 0.25;
-    double left_hand_closed = 0.4;
+    double left_hand_closed = 1;
     double left_hand_open = 0.6;
 
     double arm_up = 2800;
