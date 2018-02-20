@@ -80,9 +80,13 @@ public class OmniHardware
 
     // servo positions
     double right_hand_open = 0.6;
-    double right_hand_closed = 0.25;
+    double right_hand_closed = 0.0;
     double left_hand_closed = 1;
     double left_hand_open = 0.6;
+    double right_hand_buiten = 1;
+    double left_hand_buiten = 0;
+
+
 
     double arm_up = 2800;
     double arm_down = 0;
@@ -186,6 +190,7 @@ public class OmniHardware
 
         arm.setPower(0);
 
+        setHandStart();
         // servo's have been initiated
         isServoInit = true;
     }
@@ -342,6 +347,12 @@ public class OmniHardware
         setRightHandPosition(right_hand_closed);
     }
 
+    // put hand in starting position
+    public void setHandStart(){
+        setLeftHandPosition(left_hand_buiten);
+        setRightHandPosition(right_hand_buiten);
+    }
+
     public void sleep(long ms){
         try {
             Thread.sleep(ms);
@@ -367,13 +378,6 @@ public class OmniHardware
             telemetry.addLine("Drive motors have not been initialized");
         }
         return isDriveInit;
-    }
-
-    public void setHandPosition(double position){
-        if(isServoInit) {
-            hand_left.setPosition(position);
-            hand_right.setPosition(1 - position + afwijking);
-        }else telemetry.addLine("servo's have not been initialized");
     }
 
     public void setLeftHandPosition(double position){

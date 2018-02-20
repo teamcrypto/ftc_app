@@ -57,7 +57,7 @@ public class Omni_drive extends OpMode
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
 
-        double xPower = gamepad1.left_stick_x;
+        double xPower = -gamepad1.left_stick_x;
         double yPower = -gamepad1.left_stick_y;
 
         double rotation = Math.atan2(yPower, xPower);
