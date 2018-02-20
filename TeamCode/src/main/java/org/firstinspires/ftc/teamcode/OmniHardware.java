@@ -299,28 +299,22 @@ public class OmniHardware
         }
     }
 
-    public void encoderDrive(double power, int ticks, ArrayList<DcMotor> _motors) {
-        if(checkDriveInit()) {
-            for (DcMotor motor :
-                    _motors) {
-                int newPos = motor.getCurrentPosition() + ticks;
-                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motor.setTargetPosition(newPos);
-                motor.setPower(power);
-            }
-            motors.addAll(_motors);
+    public void encoderDrive(double power, int ticks, DcMotor motor) {
+        if (checkDriveInit()) {
+            int newPos = motor.getCurrentPosition() + ticks;
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setTargetPosition(newPos);
+            motor.setPower(power);
+            motors.add(motor);
         }
     }
 
     public void driveForward(double power, int ticks){
-        if(checkDriveInit()) {
-            ArrayList<DcMotor> _motors = new ArrayList<>(2);
-            _motors.add(leftDrive);
-            _motors.add(rightDrive);
-            encoderDrive(power, ticks, _motors);
-            startDrive();
-        }
+        encoderDrive(0.5, 1000, leftDrive);
+        encoderDrive(0.5, 1000, rightDrive);
+        startDrive();
     }
+
 
     public void testEncoders(){
         driveForward(0.5, 1200);
