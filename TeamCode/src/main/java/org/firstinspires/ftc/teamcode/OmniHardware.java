@@ -140,7 +140,8 @@ public class OmniHardware
         telemetry = _telemetry;
 
         initDriveMotors();
-        initArm();
+        //initArm();
+        initHand();
     }
 
     public void initDriveMotors(){
@@ -177,10 +178,6 @@ public class OmniHardware
     }
 
     public void initArm(){
-        // servo's voor de hand
-        hand_left = hwMap.get(Servo.class, "left_hand");
-        hand_right = hwMap.get(Servo.class, "right_hand");
-
         arm = hwMap.get(DcMotor.class, "arm");
 
         // reset the encoders
@@ -189,10 +186,18 @@ public class OmniHardware
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         arm.setPower(0);
+        initHand();
 
-        setHandStart();
+    }
+
+    public void initHand(){
+        // servo's voor de hand
+        hand_left = hwMap.get(Servo.class, "left_hand");
+        hand_right = hwMap.get(Servo.class, "right_hand");
+
         // servo's have been initiated
         isServoInit = true;
+        setHandStart();
     }
 
     public RelicRecoveryVuMark recognizeTarget(){
@@ -275,6 +280,12 @@ public class OmniHardware
         telemetry.update();
     }
 
+    private boolean started = false;
+    public void moveArmUp(){
+        arm.setTargetPosition(1000);
+        arm.setPower(0.3);
+    }
+
     public RelicRecoveryVuMark getPatternId(){
         return vuMark;
     }
@@ -322,11 +333,37 @@ public class OmniHardware
         }
     }
 
+    public void powerForward(double xPower, double yPower, double turnPower){
+        double rotation = Math.atan2(yPower, xPower);
+        double lenght = Math.sqrt(Math.pow(xPower, 2) + Math.pow(yPower, 2));  // pythagoras
+
+        telemetry.addData("rotation: ", rotation);
+        telemetry.addData("lenght: ", lenght);
+
+        // rotate the stick input by 45 degrees
+        rotation += (2* Math.PI) / 8;
+
+        double newXPower = lenght * Math.cos(rotation);
+        double newYPower = lenght * Math.sin(rotation);
+
+        telemetry.addData("old x: ", xPower);
+        telemetry.addData("new x: ", newXPower);
+        telemetry.addData("old y: ", yPower);
+        telemetry.addData("new y: ", newYPower);
+
+        xPower = newXPower;
+        yPower = newYPower;
+
+        // Send calculated power to wheels
+        upDrive.setPower(xPower + turnPower);
+        downDrive.setPower(xPower - turnPower);
+        leftDrive.setPower(yPower + turnPower);
+        rightDrive.setPower(yPower - turnPower);
+    }
+
     public void testEncoders(){
         driveForward(0.5, 1200);
     }
-
-
 
     public void addVar(int var, String name, int range_min, int range_max){
         userInput.addVariable(var, name, range_min, range_max);
@@ -385,6 +422,7 @@ public class OmniHardware
             hand_left.setPosition(position);
         }else telemetry.addLine("servo's have not been initialized");
     }
+
     public void setRightHandPosition(double position){
         if(isServoInit) {
             hand_right.setPosition(position);

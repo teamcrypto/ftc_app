@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 /**
  * Demonstrates empty OpMode
  */
-@Autonomous(name = "Open hand", group = "Concept")
+@Autonomous(name = "Open hand", group = "Hand")
 //@Disabled
 public class Hand_open extends OpMode {
 

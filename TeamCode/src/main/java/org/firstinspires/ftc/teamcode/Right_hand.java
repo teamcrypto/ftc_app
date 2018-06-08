@@ -33,7 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 
-@Autonomous(name = "Test: Right hand", group = "test")
+@Autonomous(name = "Test: Right hand", group = "Hand")
 //@Disabled
 public class Right_hand extends OpMode {
   OmniHardware bot = null;

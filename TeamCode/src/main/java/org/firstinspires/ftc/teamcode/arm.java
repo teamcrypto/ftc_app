@@ -48,7 +48,9 @@ public class arm extends LinearOpMode
         waitForStart();
 
         while (opModeIsActive()) {
-            bot.arm.setPower(gamepad1.left_stick_y * 0.3);
+            double power = gamepad1.left_stick_y * 0.3;
+            bot.arm.setPower(power);
+            telemetry.addData("arm power", power);
             telemetry.update();
         }
     }

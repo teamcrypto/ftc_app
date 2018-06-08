@@ -29,48 +29,36 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 
-/**
- * This file contains an example of an iterative (Non-Linear) "OpMode".
- * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
- * The names of OpModes appear on the menu of the FTC Driver Station.
- * When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all iterative OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
-@TeleOp(name="servo", group="Hand")
-//@Disabled
-public class ServoWithController extends OpMode
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="RL")
+//\|@Disabled
+public class Autonomous_RL extends LinearOpMode
 {
     OmniHardware bot = null;
-    @Override
-    public void init() {
-         bot = new OmniHardware(this);
-        // Tell the driver that initialization is complete.
-        telemetry.addData("Status", "Initialized");
-    }
 
     @Override
-    public void loop() {
-        if (gamepad1.x) {
-            bot.open_hand();
-        }
+    public void runOpMode(){
+        bot = new OmniHardware(this);
 
-        if (gamepad1.b) {
-            bot.close_hand();
-        }
+        waitForStart();
+
+        bot.close_hand();
+        sleep(2000);
+        bot.arm.setPower(0.3);
+        bot.sleep(1500);
+        bot.arm.setPower(0);
+        bot.upDrive.setPower(1);
+        bot.downDrive.setPower(1);
+        bot.sleep(2000);
+        bot.upDrive.setPower(0);
+        bot.downDrive.setPower(0);
+
+        telemetry.update();
     }
+
+
+
 }

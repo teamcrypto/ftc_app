@@ -29,48 +29,29 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 
-/**
- * This file contains an example of an iterative (Non-Linear) "OpMode".
- * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
- * The names of OpModes appear on the menu of the FTC Driver Station.
- * When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all iterative OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
-@TeleOp(name="servo", group="Hand")
+@Autonomous(name="test motor", group="Test")
 //@Disabled
-public class ServoWithController extends OpMode
+public class motor_test extends LinearOpMode
 {
-    OmniHardware bot = null;
-    @Override
-    public void init() {
-         bot = new OmniHardware(this);
-        // Tell the driver that initialization is complete.
-        telemetry.addData("Status", "Initialized");
-    }
+    DcMotor a = null;
 
     @Override
-    public void loop() {
-        if (gamepad1.x) {
-            bot.open_hand();
-        }
+    public void runOpMode(){
+        a = hardwareMap.get(DcMotor.class, "a");
 
-        if (gamepad1.b) {
-            bot.close_hand();
+        waitForStart();
+        while(opModeIsActive()) {
+            a.setPower(gamepad1.left_stick_y);
+            telemetry.addLine("Running...");
+            telemetry.update();
         }
     }
+
+
+
 }

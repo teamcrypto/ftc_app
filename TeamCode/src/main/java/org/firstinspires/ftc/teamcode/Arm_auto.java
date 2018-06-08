@@ -40,6 +40,9 @@ public class Arm_auto extends OpMode {
     @Override
   public void init() {
      bot = new OmniHardware(this);
+     bot.sleep(3000);
+     telemetry.addData("done", "done");
+     telemetry.update();
      //bot.moveArmUp();
  }
 
