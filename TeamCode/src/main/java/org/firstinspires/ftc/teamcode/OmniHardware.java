@@ -102,6 +102,7 @@ public class OmniHardware
     // are the servo's and drive motors initiated ?
     private boolean isServoInit = false;
     private boolean isDriveInit = false;
+    private boolean isAutonomous = false;
 
     // variables for using encoders
     private static final double     COUNTS_PER_MOTOR_REV    = 32176/30 *1.04;  // the example variables didn't works so well for us
@@ -128,6 +129,12 @@ public class OmniHardware
         init(lOpMode.hardwareMap, lOpMode.telemetry);
     }
 
+    public OmniHardware(LinearOpMode lOpMode, boolean _isAutonomous) {
+        isAutonomous = _isAutonomous;
+        opMode = lOpMode;
+        init(lOpMode.hardwareMap, lOpMode.telemetry);
+    }
+
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap, Telemetry _telemetry) {
         // Save reference to Hardware map
@@ -150,26 +157,27 @@ public class OmniHardware
         leftDrive = hwMap.get(DcMotor.class, "LV");
 
         // reset the encoders
-        /*leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        downDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        upDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if(isAutonomous) {
+            leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            downDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            upDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // turn on the encoders
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        downDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        upDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-*/
+            // turn on the encoders
+            leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            downDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            upDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }else {
+            leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            downDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            upDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
 
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        downDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        upDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Set the direction of the motors so that if the motors rotate forward the robot turns clockwise
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
         downDrive.setDirection(DcMotor.Direction.REVERSE);
-
 
         // Set all motors to zero power
         leftDrive.setPower(0);
@@ -191,7 +199,6 @@ public class OmniHardware
 
         arm.setPower(0);
         initHand();
-
     }
 
     public void initHand(){
@@ -270,7 +277,6 @@ public class OmniHardware
     public void printPatternId(){
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
@@ -295,7 +301,7 @@ public class OmniHardware
     }
 
     public void startDrive(){
-        if(checkDriveInit()) {
+        if(checkDriveInit() && checkAutonmous()) {
             boolean isBusy = false;
             do {
                 for (DcMotor motor :
@@ -315,7 +321,7 @@ public class OmniHardware
     }
 
     public void encoderDrive(double power, int ticks, DcMotor motor) {
-        if (checkDriveInit()) {
+        if (checkDriveInit() && checkAutonmous()) {
             int newPos = motor.getCurrentPosition() + ticks;
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setTargetPosition(newPos);
@@ -410,19 +416,33 @@ public class OmniHardware
         if(!isDriveInit){
             telemetry.addLine("Drive motors have not been initialized");
         }
-        return isDriveInit;
+        return isAutonomous;
+    }
+
+    boolean checkAutonmous(){
+        if(!isAutonomous){
+            telemetry.addLine("Robot not in autonomous");
+        }
+        return isAutonomous;
+    }
+
+    boolean checkServo(){
+        if(!isServoInit){
+            telemetry.addLine("Servo's have not been initialized");
+        }
+        return isServoInit;
     }
 
     public void setLeftHandPosition(double position){
-        if(isServoInit) {
+        if(checkServo()) {
             hand_left.setPosition(position);
-        }else telemetry.addLine("servo's have not been initialized");
+        }
     }
 
     public void setRightHandPosition(double position){
-        if(isServoInit) {
+        if(checkServo()) {
             hand_right.setPosition(position);
-        }else telemetry.addLine("servo's have not been initialized");
+        }
     }
  }
 
