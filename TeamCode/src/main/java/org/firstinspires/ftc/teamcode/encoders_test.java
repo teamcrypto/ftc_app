@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="encoder single")
+@Autonomous(name="Encoder test", group = "test")
 //@Disabled
 public class encoders_test extends LinearOpMode
 {
@@ -58,7 +58,7 @@ public class encoders_test extends LinearOpMode
 
     @Override
     public void runOpMode() {
-        motor = hardwareMap.get(DcMotor.class, "up_drive");
+        motor = hardwareMap.get(DcMotor.class, "RV");
         telemetry.addData("Status:", "resetting encoders");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         telemetry.addData("Status:", "setting mode");

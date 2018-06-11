@@ -49,28 +49,28 @@ public class Autonomous_BL extends LinearOpMode
         bot.arm.setPower(0.3);
         bot.sleep(1500);
         bot.arm.setPower(0);
-        bot.upDrive.setPower(1);
-        bot.downDrive.setPower(1);
+        bot.rechtsVoor.setPower(1);
+        bot.linksAchter.setPower(1);
         bot.sleep(2000);
-        bot.upDrive.setPower(0);
-        bot.downDrive.setPower(0);
+        bot.rechtsVoor.setPower(0);
+        bot.linksAchter.setPower(0);
         bot.sleep(1000);
         double turnpPower = 0.5;
-        bot.upDrive.setPower( turnpPower);
-        bot.downDrive.setPower(turnpPower);
-        bot.leftDrive.setPower(turnpPower);
-        bot.rightDrive.setPower(turnpPower);
+        bot.rechtsVoor.setPower( turnpPower);
+        bot.linksAchter.setPower(turnpPower);
+        bot.linksVoor.setPower(turnpPower);
+        bot.rechtsAchter.setPower(turnpPower);
         bot.sleep(1000);
-        bot.upDrive.setPower(0);
-        bot.downDrive.setPower(0);
-        bot.rightDrive.setPower(0);
-        bot.leftDrive.setPower(0);
+        bot.rechtsVoor.setPower(0);
+        bot.linksAchter.setPower(0);
+        bot.rechtsAchter.setPower(0);
+        bot.linksVoor.setPower(0);
 
-        bot.upDrive.setPower(1);
-        bot.downDrive.setPower(1);
+        bot.rechtsVoor.setPower(1);
+        bot.linksAchter.setPower(1);
         bot.sleep(2000);
-        bot.upDrive.setPower(0);
-        bot.downDrive.setPower(0);
+        bot.rechtsVoor.setPower(0);
+        bot.linksAchter.setPower(0);
         bot.sleep(2000);
     }
 

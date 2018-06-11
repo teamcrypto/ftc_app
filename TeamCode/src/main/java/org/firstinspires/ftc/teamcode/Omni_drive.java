@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
     This is
  */
 
-@TeleOp(name="Omni drive")
+@TeleOp(name="Omni drive", group = "final")
 //@Disabled
 public class Omni_drive extends OpMode
 {
@@ -82,10 +82,10 @@ public class Omni_drive extends OpMode
         double turnpPower = -gamepad1.right_stick_x;
 
         // Send calculated power to wheels
-        bot.upDrive.setPower(xPower + turnpPower);
-        bot.downDrive.setPower(xPower - turnpPower);
-        bot.leftDrive.setPower(yPower + turnpPower);
-        bot.rightDrive.setPower(yPower - turnpPower);
+        bot.rechtsVoor.setPower(xPower + turnpPower);
+        bot.linksAchter.setPower(xPower - turnpPower);
+        bot.linksVoor.setPower(yPower + turnpPower);
+        bot.rechtsAchter.setPower(yPower - turnpPower);
 //        bot.powerForward(xPower, yPower, turnPower);
 
         if(gamepad1.x){
@@ -97,19 +97,19 @@ public class Omni_drive extends OpMode
         }
 
         if(gamepad1.dpad_up){
-            bot.upDrive.setPower(1);
+            bot.rechtsVoor.setPower(1);
             telemetry.addData("up ", 1);
         }
         if(gamepad1.dpad_right){
-            bot.rightDrive.setPower(1);
+            bot.rechtsAchter.setPower(1);
             telemetry.addData("right ", 1);
         }
         if(gamepad1.dpad_down) {
-            bot.downDrive.setPower(1);
+            bot.linksAchter.setPower(1);
             telemetry.addData("down ", 1);
         }
         if(gamepad1.dpad_left){
-            bot.leftDrive.setPower(1);
+            bot.linksVoor.setPower(1);
             telemetry.addData("left ", 1);
         }
 
@@ -130,16 +130,9 @@ public class Omni_drive extends OpMode
         /*telemetry.addData("arm position", bot.arm.getCurrentPosition());
         telemetry.addData("servo Pos", bot.hand_left.getPosition());
         telemetry.addData("count without", count_without);*/
-
-
-
-
         telemetry.update();
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
     @Override
     public void stop() {
     }

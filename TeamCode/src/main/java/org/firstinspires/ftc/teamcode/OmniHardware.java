@@ -66,10 +66,10 @@ import java.util.ArrayList;
 public class OmniHardware
 {
     /* Public OpMode members. */
-    DcMotor upDrive = null;
-    DcMotor rightDrive = null;
-    DcMotor leftDrive = null;
-    DcMotor downDrive = null;
+    DcMotor rechtsVoor = null;
+    DcMotor rechtsAchter = null;
+    DcMotor linksVoor = null;
+    DcMotor linksAchter = null;
     DcMotor arm = null;
     Servo hand_left = null;
     Servo hand_right = null;
@@ -151,39 +151,39 @@ public class OmniHardware
     }
 
     public void initDriveMotors(){
-        upDrive = hwMap.get(DcMotor.class, "RV");
-        rightDrive = hwMap.get(DcMotor.class, "RA");
-        downDrive = hwMap.get(DcMotor.class, "LA");
-        leftDrive = hwMap.get(DcMotor.class, "LV");
+        rechtsVoor = hwMap.get(DcMotor.class, "RV");       // upDrive = rechtsVoor
+        rechtsAchter = hwMap.get(DcMotor.class, "RA");    // rightDrive = rechtsAchter
+        linksAchter = hwMap.get(DcMotor.class, "LA");     // downDrive = linksAchter
+        linksVoor = hwMap.get(DcMotor.class, "LV");     // leftDrive = linksVoor
 
         // reset the encoders
         if(isAutonomous) {
-            leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            downDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            upDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            linksVoor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rechtsAchter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            linksAchter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rechtsVoor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             // turn on the encoders
-            leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            downDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            upDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            linksVoor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rechtsAchter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            linksAchter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rechtsVoor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }else {
-            leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            downDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            upDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            linksVoor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rechtsAchter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            linksAchter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rechtsVoor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         // Set the direction of the motors so that if the motors rotate forward the robot turns clockwise
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        downDrive.setDirection(DcMotor.Direction.REVERSE);
+        rechtsAchter.setDirection(DcMotor.Direction.REVERSE);
+        linksAchter.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
-        downDrive.setPower(0);
-        upDrive.setPower(0);
+        linksVoor.setPower(0);
+        rechtsAchter.setPower(0);
+        linksAchter.setPower(0);
+        rechtsVoor.setPower(0);
 
         // drive motors have been initiated
         isDriveInit = true;
@@ -331,8 +331,8 @@ public class OmniHardware
     }
 
     public void driveForward(double power, int ticks){
-        encoderDrive(0.5, 1000, leftDrive);
-        encoderDrive(0.5, 1000, rightDrive);
+        encoderDrive(0.5, 1000, linksVoor);
+        encoderDrive(0.5, 1000, rechtsAchter);
         startDrive();
     }
 
@@ -358,10 +358,10 @@ public class OmniHardware
         yPower = newYPower;
 
         // Send calculated power to wheels
-        upDrive.setPower(xPower + turnPower);
-        downDrive.setPower(xPower - turnPower);
-        leftDrive.setPower(yPower + turnPower);
-        rightDrive.setPower(yPower - turnPower);
+        rechtsVoor.setPower(xPower + turnPower);
+        linksAchter.setPower(xPower - turnPower);
+        linksVoor.setPower(yPower + turnPower);
+        rechtsAchter.setPower(yPower - turnPower);
     }
     public void testEncoders(){
         driveForward(0.5, 1200);
