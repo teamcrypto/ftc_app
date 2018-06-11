@@ -34,7 +34,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.vuforia.VuMarkTargetResult;
 
 import org.firstinspires.ftc.robotcontroller.internal.UserInput;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -140,18 +139,18 @@ public class OmniHardware
         telemetry = _telemetry;
 
         initDriveMotors();
-        //initArm();
+        initArm();
         initHand();
     }
 
     public void initDriveMotors(){
-        upDrive = hwMap.get(DcMotor.class, "up_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        leftDrive = hwMap.get(DcMotor.class, "left_drive");
-        downDrive = hwMap.get(DcMotor.class, "down_drive");
+        upDrive = hwMap.get(DcMotor.class, "RV");
+        rightDrive = hwMap.get(DcMotor.class, "RA");
+        downDrive = hwMap.get(DcMotor.class, "LA");
+        leftDrive = hwMap.get(DcMotor.class, "LV");
 
         // reset the encoders
-        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        /*leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         downDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         upDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -161,11 +160,16 @@ public class OmniHardware
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         downDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         upDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+*/
 
+        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        downDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        upDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Set the direction of the motors so that if the motors rotate forward the robot turns clockwise
-        downDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        upDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        downDrive.setDirection(DcMotor.Direction.REVERSE);
+
 
         // Set all motors to zero power
         leftDrive.setPower(0);
