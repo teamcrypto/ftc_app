@@ -73,6 +73,8 @@ public class OmniHardware
     DcMotor arm = null;
     Servo hand_left = null;
     Servo hand_right = null;
+    Servo jewelServo1 = null;
+    Servo jewelServo2 = null;
 
     // get user input
     private UserInput userInput;
@@ -85,7 +87,9 @@ public class OmniHardware
     double right_hand_buiten = 1;
     double left_hand_buiten = 0;
 
-
+    int jewelNumber = 0; // which jewel is active;
+    double jewelUpPosition = 0.69;
+    double jewelDownPosition = 0.69;
 
     double arm_up = 2800;
     double arm_down = 0;
@@ -103,6 +107,7 @@ public class OmniHardware
     private boolean isServoInit = false;
     private boolean isDriveInit = false;
     private boolean isAutonomous = false;
+    private boolean isJewelInit = false;
 
     // variables for using encoders
     private static final double     COUNTS_PER_MOTOR_REV    = 32176/30 *1.04;  // the example variables didn't works so well for us
@@ -148,6 +153,7 @@ public class OmniHardware
         initDriveMotors();
         initArm();
         initHand();
+        initJewelServos();
     }
 
     public void initDriveMotors(){
@@ -209,6 +215,38 @@ public class OmniHardware
         // servo's have been initiated
         isServoInit = true;
         setHandStart();
+    }
+
+    public void initJewelServos(){
+        jewelServo1 = hwMap.get(Servo.class, "jewel1");
+        jewelServo2 = hwMap.get(Servo.class, "jewel2");
+        isJewelInit = true;
+    }
+
+    void setCurrentJewel(int number /*1 or 2*/){
+        if(number == 1 || number == 2){
+            jewelNumber = number;
+            moveJewelUp();
+        }else{
+            telemetry.addLine("jewel number is not correct");
+        }
+    }
+
+    void moveJewelUp(){
+        getJewelServo().setPosition(jewelUpPosition);
+    }
+
+    void moveJewelDown(){
+        getJewelServo().setPosition(jewelDownPosition);
+    }
+
+    Servo getJewelServo(){
+        if(!isJewelInit) { telemetry.addLine("Jewel servos are not initialized"); }
+        else {
+            if (jewelNumber == 1) return jewelServo1;
+            if (jewelNumber == 2) return jewelServo2;
+        }
+        return null;
     }
 
     public RelicRecoveryVuMark recognizeTarget(){
