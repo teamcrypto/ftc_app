@@ -32,7 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="test auto", group="Test")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="test auto", group="test")
 //\|@Disabled
 public class Autonomous_TEST extends LinearOpMode
 {
@@ -43,6 +43,7 @@ public class Autonomous_TEST extends LinearOpMode
         bot = new OmniHardware(this);
 
         waitForStart();
+        bot.driveForward(0.3, 100);
         bot.sleep(2000);
     }
 

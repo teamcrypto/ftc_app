@@ -66,10 +66,10 @@ import java.util.ArrayList;
 public class OmniHardware
 {
     /* Public OpMode members. */
-    DcMotor upDrive = null;
-    DcMotor rightDrive = null;
-    DcMotor leftDrive = null;
-    DcMotor downDrive = null;
+    DcMotor rechtsVoor = null;
+    DcMotor rechtsAchter = null;
+    DcMotor linksVoor = null;
+    DcMotor linksAchter = null;
     DcMotor arm = null;
     Servo hand_left = null;
     Servo hand_right = null;
@@ -102,6 +102,7 @@ public class OmniHardware
     // are the servo's and drive motors initiated ?
     private boolean isServoInit = false;
     private boolean isDriveInit = false;
+    private boolean isAutonomous = false;
 
     // variables for using encoders
     private static final double     COUNTS_PER_MOTOR_REV    = 32176/30 *1.04;  // the example variables didn't works so well for us
@@ -128,6 +129,12 @@ public class OmniHardware
         init(lOpMode.hardwareMap, lOpMode.telemetry);
     }
 
+    public OmniHardware(LinearOpMode lOpMode, boolean _isAutonomous) {
+        isAutonomous = _isAutonomous;
+        opMode = lOpMode;
+        init(lOpMode.hardwareMap, lOpMode.telemetry);
+    }
+
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap, Telemetry _telemetry) {
         // Save reference to Hardware map
@@ -144,38 +151,39 @@ public class OmniHardware
     }
 
     public void initDriveMotors(){
-        upDrive = hwMap.get(DcMotor.class, "RV");
-        rightDrive = hwMap.get(DcMotor.class, "RA");
-        downDrive = hwMap.get(DcMotor.class, "LA");
-        leftDrive = hwMap.get(DcMotor.class, "LV");
+        rechtsVoor = hwMap.get(DcMotor.class, "RV");       // upDrive = rechtsVoor
+        rechtsAchter = hwMap.get(DcMotor.class, "RA");    // rightDrive = rechtsAchter
+        linksAchter = hwMap.get(DcMotor.class, "LA");     // downDrive = linksAchter
+        linksVoor = hwMap.get(DcMotor.class, "LV");     // leftDrive = linksVoor
 
         // reset the encoders
-        /*leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        downDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        upDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if(isAutonomous) {
+            linksVoor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rechtsAchter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            linksAchter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rechtsVoor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // turn on the encoders
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        downDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        upDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-*/
+            // turn on the encoders
+            linksVoor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rechtsAchter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            linksAchter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rechtsVoor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }else {
+            linksVoor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rechtsAchter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            linksAchter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rechtsVoor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
 
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        downDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        upDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Set the direction of the motors so that if the motors rotate forward the robot turns clockwise
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        downDrive.setDirection(DcMotor.Direction.REVERSE);
-
+        rechtsAchter.setDirection(DcMotor.Direction.REVERSE);
+        linksAchter.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
-        downDrive.setPower(0);
-        upDrive.setPower(0);
+        linksVoor.setPower(0);
+        rechtsAchter.setPower(0);
+        linksAchter.setPower(0);
+        rechtsVoor.setPower(0);
 
         // drive motors have been initiated
         isDriveInit = true;
@@ -191,7 +199,6 @@ public class OmniHardware
 
         arm.setPower(0);
         initHand();
-
     }
 
     public void initHand(){
@@ -270,7 +277,6 @@ public class OmniHardware
     public void printPatternId(){
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
@@ -295,7 +301,7 @@ public class OmniHardware
     }
 
     public void startDrive(){
-        if(checkDriveInit()) {
+        if(checkDriveInit() && checkAutonmous()) {
             boolean isBusy = false;
             do {
                 for (DcMotor motor :
@@ -315,7 +321,7 @@ public class OmniHardware
     }
 
     public void encoderDrive(double power, int ticks, DcMotor motor) {
-        if (checkDriveInit()) {
+        if (checkDriveInit() && checkAutonmous()) {
             int newPos = motor.getCurrentPosition() + ticks;
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setTargetPosition(newPos);
@@ -325,8 +331,8 @@ public class OmniHardware
     }
 
     public void driveForward(double power, int ticks){
-        encoderDrive(0.5, 1000, leftDrive);
-        encoderDrive(0.5, 1000, rightDrive);
+        encoderDrive(0.5, 1000, linksVoor);
+        encoderDrive(0.5, 1000, rechtsAchter);
         startDrive();
     }
 
@@ -352,10 +358,10 @@ public class OmniHardware
         yPower = newYPower;
 
         // Send calculated power to wheels
-        upDrive.setPower(xPower + turnPower);
-        downDrive.setPower(xPower - turnPower);
-        leftDrive.setPower(yPower + turnPower);
-        rightDrive.setPower(yPower - turnPower);
+        rechtsVoor.setPower(xPower + turnPower);
+        linksAchter.setPower(xPower - turnPower);
+        linksVoor.setPower(yPower + turnPower);
+        rechtsAchter.setPower(yPower - turnPower);
     }
     public void testEncoders(){
         driveForward(0.5, 1200);
@@ -410,19 +416,33 @@ public class OmniHardware
         if(!isDriveInit){
             telemetry.addLine("Drive motors have not been initialized");
         }
-        return isDriveInit;
+        return isAutonomous;
+    }
+
+    boolean checkAutonmous(){
+        if(!isAutonomous){
+            telemetry.addLine("Robot not in autonomous");
+        }
+        return isAutonomous;
+    }
+
+    boolean checkServo(){
+        if(!isServoInit){
+            telemetry.addLine("Servo's have not been initialized");
+        }
+        return isServoInit;
     }
 
     public void setLeftHandPosition(double position){
-        if(isServoInit) {
+        if(checkServo()) {
             hand_left.setPosition(position);
-        }else telemetry.addLine("servo's have not been initialized");
+        }
     }
 
     public void setRightHandPosition(double position){
-        if(isServoInit) {
+        if(checkServo()) {
             hand_right.setPosition(position);
-        }else telemetry.addLine("servo's have not been initialized");
+        }
     }
  }
 

@@ -46,7 +46,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Test: All motors", group="Motor")
+@TeleOp(name="Motors test", group="test")
 //@Disabled
 public class MotorTestAll extends OpMode
 {
@@ -61,9 +61,9 @@ public class MotorTestAll extends OpMode
     @Override
     public void loop() {
         double power = 0.4;
-        bot.upDrive.setPower(power);
-        bot.downDrive.setPower(power);
-        bot.leftDrive.setPower(power);
-        bot.rightDrive.setPower(power);
+        bot.rechtsVoor.setPower(power);
+        bot.linksAchter.setPower(power);
+        bot.linksVoor.setPower(power);
+        bot.rechtsAchter.setPower(power);
     }
 }

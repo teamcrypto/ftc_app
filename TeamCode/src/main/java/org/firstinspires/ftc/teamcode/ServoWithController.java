@@ -51,7 +51,7 @@ import org.firstinspires.ftc.robotcontroller.internal.UserInput;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="servo", group="Hand")
+@TeleOp(name="servo with controller", group="Hand")
 //@Disabled
 public class ServoWithController extends OpMode
 {

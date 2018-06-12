@@ -30,26 +30,25 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@Autonomous(name="test motor", group="Test")
+@Autonomous(name="Auto servo", group = "test")
 //@Disabled
-public class motor_test extends LinearOpMode
+public class auto_servo extends LinearOpMode
 {
-    DcMotor a = null;
+    OmniHardware bot = null;
 
     @Override
     public void runOpMode(){
-        a = hardwareMap.get(DcMotor.class, "a");
+        bot = new OmniHardware(this);
+        bot.open_hand();
 
         waitForStart();
-        while(opModeIsActive()) {
-            a.setPower(gamepad1.left_stick_y);
-            telemetry.addLine("Running...");
-            telemetry.update();
-        }
+        bot.close_hand();
+        sleep(1000);
+        telemetry.update();
     }
 
 

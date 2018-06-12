@@ -29,26 +29,23 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
-@Autonomous(name="Test: servo", group = "test")
-//@Disabled
-public class auto_servo_2 extends LinearOpMode
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="encoder tset in class", group="test")
+//\|@Disabled
+public class EncoderTest extends LinearOpMode
 {
     OmniHardware bot = null;
 
     @Override
     public void runOpMode(){
         bot = new OmniHardware(this);
-        bot.open_hand();
 
         waitForStart();
-        bot.close_hand();
-        sleep(1000);
-        telemetry.update();
+        bot.encoderDrive(0.3, 1000, bot.rechtsVoor);
+        bot.startDrive();
+        bot.sleep(2000);
     }
 
 

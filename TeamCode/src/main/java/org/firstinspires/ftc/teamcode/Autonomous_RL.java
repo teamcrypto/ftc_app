@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
@@ -50,11 +49,11 @@ public class Autonomous_RL extends LinearOpMode
         bot.arm.setPower(0.3);
         bot.sleep(1500);
         bot.arm.setPower(0);
-        bot.upDrive.setPower(1);
-        bot.downDrive.setPower(1);
+        bot.rechtsVoor.setPower(1);
+        bot.linksAchter.setPower(1);
         bot.sleep(2000);
-        bot.upDrive.setPower(0);
-        bot.downDrive.setPower(0);
+        bot.rechtsVoor.setPower(0);
+        bot.linksAchter.setPower(0);
 
         telemetry.update();
     }
