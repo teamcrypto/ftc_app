@@ -45,7 +45,7 @@ public class Left_hand_uiterste extends OpMode {
 
  @Override
  public void start(){
-     bot.setLeftHandPosition(1);
+     bot.setLeftHandPosition(1.5);
      bot.sleep(2000);
  }
 

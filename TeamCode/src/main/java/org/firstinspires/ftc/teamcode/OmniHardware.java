@@ -29,10 +29,15 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.internal.UserInput;
@@ -73,6 +78,7 @@ public class OmniHardware
     DcMotor arm = null;
     Servo hand_left = null;
     Servo hand_right = null;
+    NormalizedColorSensor colorSensor = null;
 
     // get user input
     private UserInput userInput;
@@ -148,6 +154,7 @@ public class OmniHardware
         initDriveMotors();
         initArm();
         initHand();
+        initSensors();
     }
 
     public void initDriveMotors(){
@@ -189,6 +196,14 @@ public class OmniHardware
         isDriveInit = true;
     }
 
+    public void initSensors(){
+        colorSensor = hwMap.get(NormalizedColorSensor.class, "color");
+        if (colorSensor instanceof SwitchableLight) {
+            ((SwitchableLight) colorSensor).enableLight(true);
+            telemetry.addLine("turned on light of color sensor");
+        }
+    }
+
     public void initArm(){
         arm = hwMap.get(DcMotor.class, "arm");
 
@@ -209,6 +224,32 @@ public class OmniHardware
         // servo's have been initiated
         isServoInit = true;
         setHandStart();
+    }
+
+    public boolean isBlue(){
+
+        NormalizedRGBA colors = colorSensor.getNormalizedColors();
+        telemetry.addLine()
+                .addData("a", "%.3f", colors.alpha)
+                .addData("r", "%.3f", colors.red)
+                .addData("g", "%.3f", colors.green)
+                .addData("b", "%.3f", colors.blue);
+
+        // normalize colors
+        float max = Math.max(Math.max(Math.max(colors.red, colors.green), colors.blue), colors.alpha);
+        colors.red   /= max;
+        colors.green /= max;
+        colors.blue  /= max;
+        int color = colors.toColor();
+
+        telemetry.addLine("normalized color:  ")
+                .addData("a", "%02x", Color.alpha(color))
+                .addData("r", "%02x", Color.red(color))
+                .addData("g", "%02x", Color.green(color))
+                .addData("b", "%02x", Color.blue(color));
+        boolean blue = colors.blue > colors.red;
+        telemetry.addData("Color: ",blue? "rlue" : "red");
+        return true;
     }
 
     public RelicRecoveryVuMark recognizeTarget(){

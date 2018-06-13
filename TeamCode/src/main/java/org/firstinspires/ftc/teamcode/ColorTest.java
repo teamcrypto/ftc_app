@@ -30,14 +30,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
-@Autonomous(name="example")
-@Disabled
-public class example extends LinearOpMode
+@Autonomous(name="Color", group="test")
+//@Disabled
+public class ColorTest extends LinearOpMode
 {
     OmniHardware bot = null;
 
@@ -45,9 +44,13 @@ public class example extends LinearOpMode
     public void runOpMode(){
         bot = new OmniHardware(this);
 
+        telemetry.update();
         waitForStart();
 
-        telemetry.update();
+        while(opModeIsActive()) {
+            bot.isBlue();
+            telemetry.update();
+        }
     }
 
 
