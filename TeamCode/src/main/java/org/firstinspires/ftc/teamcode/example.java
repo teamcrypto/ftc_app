@@ -43,9 +43,10 @@ public class example extends LinearOpMode
 
     @Override
     public void runOpMode(){
-        bot = new OmniHardware(this);
+        bot = new OmniHardware(this, true);
         telemetry.addLine("initialized");
         telemetry.update();
+
         waitForStart();
 
         while (opModeIsActive()){
